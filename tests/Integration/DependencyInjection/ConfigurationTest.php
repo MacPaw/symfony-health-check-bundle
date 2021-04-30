@@ -18,7 +18,7 @@ final class ConfigurationTest extends TestCase
 
         self::assertSame($expectedBundleDefaultConfig, $this->processConfiguration([]));
     }
-    
+
     public function testProcessConfiguration(): void
     {
         $expectedConfig = [
@@ -27,7 +27,7 @@ final class ConfigurationTest extends TestCase
             ]
         ];
         $new = ['health_checks' => [['id' => 'symfony_health_check_bundle.doctrine_check']]];
-        
+
         self::assertSame(
             $expectedConfig,
             $this->processConfiguration($new)
