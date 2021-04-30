@@ -19,7 +19,6 @@ class SymfonyHealthCheckExtensionTest extends TestCase
         $container = $this->createContainerFromFixture('empty_bundle_config');
 
         try {
-            dd($container->getParameterBag());
             $container->getDefinition('health_checks');
         } catch (Throwable $exception) {
             self::assertInstanceOf(ServiceNotFoundException::class, $exception);
@@ -34,9 +33,10 @@ class SymfonyHealthCheckExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFixture('filled_bundle_config');
 
-        self::assertCount(3, $container->getDefinitions());
+        self::assertCount(4, $container->getDefinitions());
         self::assertArrayHasKey('SymfonyHealthCheckBundle\Controller\HealthController', $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check_bundle.doctrine_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check_bundle.environment_check', $container->getDefinitions());
     }
 
     private function createContainerFromFixture(string $fixtureFile): ContainerBuilder

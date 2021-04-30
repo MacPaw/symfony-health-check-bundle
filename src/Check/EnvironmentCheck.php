@@ -7,9 +7,9 @@ namespace SymfonyHealthCheckBundle\Check;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Throwable;
 
-class VersionCheck implements CheckInterface
+class EnvironmentCheck implements CheckInterface
 {
-    private const CHECK_RESULT_KEY = 'version';
+    private const CHECK_RESULT_KEY = 'environment';
 
     private ContainerInterface $container;
 
@@ -21,11 +21,11 @@ class VersionCheck implements CheckInterface
     public function check(): array
     {
         try {
-            $this->container->getParameter('app_version');
+            $env = $this->container->getParameter('kernel.environment');
         } catch (Throwable $e) {
-            return [self::CHECK_RESULT_KEY => false];
+            return [self::CHECK_RESULT_KEY => 'Could not determine'];
         }
 
-        return [self::CHECK_RESULT_KEY => true];
+        return [self::CHECK_RESULT_KEY => $env];
     }
 }
