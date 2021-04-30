@@ -9,11 +9,22 @@ use Throwable;
 
 abstract class AbstractException extends Exception implements ParameterExceptionInterface
 {
+    /**
+     * @var iterable[]
+     */
     private array $parameters;
 
+    /**
+     * AbstractException constructor.
+     *
+     * @param string         $message
+     * @param iterable[]     $parameters
+     * @param int            $code
+     * @param Throwable|null $previous
+     */
     public function __construct(
         string $message,
-        array $parameters = [],
+        array $parameters,
         int $code = 0,
         Throwable $previous = null
     ) {
