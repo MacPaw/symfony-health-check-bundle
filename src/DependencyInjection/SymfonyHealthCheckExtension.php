@@ -23,6 +23,8 @@ class SymfonyHealthCheckExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('health_checks.xml');
+        $loader->load('controller.xml');
 
         $this->loadHealthChecks($config, $loader, $container);
     }

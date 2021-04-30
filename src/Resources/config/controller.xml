@@ -4,6 +4,10 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services
     http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service autowire="true" public="false" id="symfony_health_check_bundle.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineCheck"/>
+        <defaults autowire="true" autoconfigure="true" />
+
+        <service public="true" id="SymfonyHealthCheckBundle\Controller\HealthController" class="SymfonyHealthCheckBundle\Controller\HealthController">
+            <tag name="container.service_subscriber" />
+        </service>
     </services>
 </container>
