@@ -19,6 +19,7 @@ class SymfonyHealthCheckExtensionTest extends TestCase
         $container = $this->createContainerFromFixture('empty_bundle_config');
 
         try {
+            dd($container->getParameterBag());
             $container->getDefinition('health_checks');
         } catch (Throwable $exception) {
             self::assertInstanceOf(ServiceNotFoundException::class, $exception);
