@@ -1,0 +1,47 @@
+{
+    "name": "macpaw/symfony-health-check-bundle",
+    "description": "Symfony health check bundle",
+    "homepage": "https://github.com/MacPaw/symfony-health-check-bundle",
+    "type": "symfony-bundle",
+    "keywords": [
+        "MacPaw",
+        "Symfony",
+        "Health-Check",
+        "CheckDoctrine",
+        "CheckRedis",
+        "CheckRabbitmq"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yozhef Hisem",
+            "email": "hisemjo@gmail.com",
+            "homepage": "https://macpaw.com/",
+            "role": "Software Engineer"
+        },
+        {
+            "name": "Ivan Hisem",
+            "email": "2yonchi@gmail.com",
+            "homepage": "https://macpaw.com/",
+            "role": "Software Engineer"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "symfony/framework-bundle": "^3.4 || ^4.0 || ^5.0"
+    },
+    "require-dev": {
+    },
+    "autoload": {
+        "psr-4": {
+            "SymfonyHealthCheckBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SymfonyHealthCheckBundle\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+    }
+}
