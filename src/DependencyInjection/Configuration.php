@@ -19,6 +19,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('id')->cannotBeEmpty()->end()
                     ->end()
+                ->canBeEnabled()
                 ->end()
             ->end()
         ;
