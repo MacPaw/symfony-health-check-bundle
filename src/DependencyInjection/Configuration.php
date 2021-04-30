@@ -16,14 +16,15 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->arrayNode('health_checks')
-                    ->children()
-                        ->scalarNode('id')->cannotBeEmpty()->end()
+                    ->prototype('array')
+                        ->children()
+                            ->scalarNode('id')->cannotBeEmpty()->end()
+                        ->end()
                     ->end()
-                ->canBeEnabled()
                 ->end()
             ->end()
         ;
-    
+
         return $treeBuilder;
     }
 }

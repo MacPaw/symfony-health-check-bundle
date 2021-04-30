@@ -34,14 +34,12 @@ class SymfonyHealthCheckExtension extends Extension
         XmlFileLoader $loader,
         ContainerBuilder $container
     ): void {
-        if ($config['health_checks']['enabled']) {
-            $loader->load('health_checks.xml');
-            
-            $healthCheckCollection = $container->findDefinition(HealthController::class);
-            foreach ($config['health_checks'] as $healthCheckConfig) {
-                $healthCheckDefinition = $container->findDefinition($healthCheckConfig['id']);
-                $healthCheckCollection->addMethodCall('addHealthCheck', [$healthCheckDefinition]);
-            }
+        $loader->load('health_checks.xml');
+        
+        $healthCheckCollection = $container->findDefinition(HealthController::class);
+        foreach ($config['health_checks'] as $healthCheckConfig) {
+            $healthCheckDefinition = $container->findDefinition($healthCheckConfig['id']);
+            $healthCheckCollection->addMethodCall('addHealthCheck', [$healthCheckDefinition]);
         }
     }
 }
