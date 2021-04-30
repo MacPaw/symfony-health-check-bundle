@@ -5,6 +5,8 @@
     http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <service autowire="true" id="symfony_health_check_bundle.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineCheck" public="false" />
-        <service autowire="true" id="symfony_health_check_bundle.health_controller" class="SymfonyHealthCheckBundle\Controller\HealthController" />
+        <service id="SymfonyHealthCheckBundle\Controller\HealthController" class="SymfonyHealthCheckBundle\Controller\HealthController" public="true">
+            <tag name="container.service_subscriber" />
+        </service>
     </services>
 </container>
