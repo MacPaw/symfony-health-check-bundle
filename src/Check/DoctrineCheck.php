@@ -25,7 +25,7 @@ class DoctrineCheck implements CheckInterface
     public function check(): array
     {
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
-        
+
         if ($entityManager === false) {
             throw new ServiceNotFoundException('Entity Manager Not Found.');
         }
@@ -35,7 +35,7 @@ class DoctrineCheck implements CheckInterface
         } catch (Throwable $e) {
             return [self::CHECK_RESULT_KEY => false];
         }
-        
+
         return [self::CHECK_RESULT_KEY => true];
     }
 }

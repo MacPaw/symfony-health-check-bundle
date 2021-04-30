@@ -28,14 +28,14 @@ class SymfonyHealthCheckExtension extends Extension
 
         $this->loadHealthChecks($config, $loader, $container);
     }
-    
+
     private function loadHealthChecks(
         array $config,
         XmlFileLoader $loader,
         ContainerBuilder $container
     ): void {
         $loader->load('health_checks.xml');
-        
+
         $healthCheckCollection = $container->findDefinition(HealthController::class);
         foreach ($config['health_checks'] as $healthCheckConfig) {
             $healthCheckDefinition = $container->findDefinition($healthCheckConfig['id']);

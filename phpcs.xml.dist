@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg value="p"/>
+    <arg name="extensions" value="php"/>
+    <arg name="tab-width" value="4"/>
+    <arg name="report-width" value="120"/>
+
+    <rule ref="PSR12" />
+
+    <file>src/</file>
+    <file>tests/</file>
+
+    <rule ref="Squiz.PHP.LowercasePHPFunctions"/>
+    <rule ref="Generic.PHP.RequireStrictTypes"/>
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found"></rule>
+    <rule ref="Squiz.Commenting.FunctionComment.SpacingAfterParamType"></rule>
+
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="eval=>NULL,dd=>NULL,die=>NULL,var_dump=>NULL,dump=>NULL,sizeof=>count,delete=>unset,print=>echo,echo=>NULL,print_r=>NULL,create_function=>NULL"/>
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.FunctionSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+            <property name="spacingBeforeFirst" value="0" />
+            <property name="spacingAfterLast" value="0" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false" />
+        </properties>
+    </rule>
+</ruleset>

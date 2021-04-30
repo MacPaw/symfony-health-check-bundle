@@ -16,12 +16,12 @@ final class HealthController extends AbstractController
      * @var array<CheckInterface>
      */
     private array $healthChecks = [];
-    
+
     public function addHealthCheck(CheckInterface $healthCheck): void
     {
         $this->healthChecks[] = $healthCheck;
     }
-    
+
     /**
      * @Route(
      *     path="/health",
