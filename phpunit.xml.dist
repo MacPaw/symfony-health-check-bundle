@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
+        bootstrap="vendor/autoload.php"
+        cacheResult="false"
+        beStrictAboutOutputDuringTests="true"
+>
+  <coverage>
+    <include>
+      <directory>./src</directory>
+    </include>
+    <report>
+      <clover outputFile="clover.xml"/>
+    </report>
+  </coverage>
+  <php>
+    <ini name="error_reporting" value="-1"/>
+    <ini name="memory_limit" value="-1"/>
+    <server name="APP_ENV" value="test" force="true"/>
+    <server name="APP_DEBUG" value="0" force="true"/>
+    <server name="SHELL_VERBOSITY" value="-1"/>
+    <server name="SYMFONY_PHPUNIT_REMOVE" value=""/>
+    <server name="SYMFONY_PHPUNIT_VERSION" value="9"/>
+  </php>
+  <testsuites>
+    <testsuite name="Symfony Health Check Bundle Test Suite">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+  <listeners>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
+  </listeners>
+  <logging/>
+</phpunit>
