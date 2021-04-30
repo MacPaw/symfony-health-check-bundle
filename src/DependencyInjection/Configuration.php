@@ -16,12 +16,9 @@ class Configuration implements ConfigurationInterface
         $root
             ->children()
                 ->arrayNode('health_checks')
-                    ->arrayPrototype()
-                        ->children()
-                            ->scalarNode('id')->cannotBeEmpty()->end()
-                        ->end()
+                    ->children()
+                        ->scalarNode('id')->cannotBeEmpty()->end()
                     ->end()
-                ->canBeEnabled()
                 ->end()
             ->end()
         ;
