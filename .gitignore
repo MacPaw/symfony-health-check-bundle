@@ -3,3 +3,8 @@ build
 vendor
 /composer.lock
 /.phpcs-cache
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
