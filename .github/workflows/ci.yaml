@@ -1,0 +1,55 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches: [ master, develop ]
+
+jobs:
+    run:
+        runs-on: ubuntu-18.04
+        strategy:
+            fail-fast: false
+            matrix:
+                php:
+                    - '7.4'
+                    - '8.0'
+                coverage: ['none']
+                include:
+                    - description: 'Log Code Coverage'
+                      php: '8.0'
+                      coverage: 'xdebug'
+
+        name: PHP ${{ matrix.php }} ${{ matrix.description }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.composer/cache/files
+                  key: ${{ matrix.php }}
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: ${{ matrix.coverage }}
+
+            - name: Install dependencies
+              run: composer install
+
+            - name: Run PHPUnit tests
+              run: vendor/bin/simple-phpunit
+              if: matrix.coverage == 'none'
+
+            - name: PHPUnit tests and Log Code coverage
+              run: vendor/bin/simple-phpunit --coverage-clover=coverage.xml
+              if: matrix.coverage == 'xdebug'
+
+            - name: Run codecov
+              uses: codecov/codecov-action@v1
+              if: matrix.coverage == 'xdebug'
+              with:
+                  file: './coverage.xml'
+                  fail_ci_if_error: true
