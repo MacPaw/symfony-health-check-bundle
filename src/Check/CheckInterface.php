@@ -7,7 +7,7 @@ namespace SymfonyHealthCheckBundle\Check;
 interface CheckInterface
 {
     /**
-     * @return array<string, bool>
+     * @return array<string, mixed>
      */
     public function check(): array;
 }
