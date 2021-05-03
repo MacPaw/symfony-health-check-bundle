@@ -15,12 +15,19 @@ jobs:
                     - '7.4'
                     - '8.0'
                 coverage: ['none']
+                symfony-versions:
+                    - '3.4.*'
+                    - '4.1.*'
+                    - '4.4.*'
+                    - '5.0.*'
+                    - '5.1.*'
+                    - '5.2.*'
                 include:
                     - description: 'Log Code Coverage'
                       php: '8.0'
                       coverage: 'xdebug'
 
-        name: PHP ${{ matrix.php }} ${{ matrix.description }}
+        name: PHP ${{ matrix.php }} ${{ matrix.symfony-versions }} ${{ matrix.description }}
         steps:
             - name: Checkout
               uses: actions/checkout@v2
@@ -28,13 +35,30 @@ jobs:
             - uses: actions/cache@v2
               with:
                   path: ~/.composer/cache/files
-                  key: ${{ matrix.php }}
+                  key: ${{ matrix.php }}-${{ matrix.symfony-versions }}
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   coverage: ${{ matrix.coverage }}
+
+            - name: Add PHPUnit matcher
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - name: Set composer cache directory
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer
+              uses: actions/cache@v2.1.2
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.symfony-versions }}-composer-${{ hashFiles('composer.json') }}
+                  restore-keys: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.symfony-versions }}-composer
+
+            - name: Install dependencies
+              run: composer require "symfony/symfony:${{ matrix.symfony-versions }}" --no-update
 
             - name: Install dependencies
               run: composer install
