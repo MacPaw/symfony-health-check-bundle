@@ -6,10 +6,11 @@
     "keywords": [
         "MacPaw",
         "Symfony",
-        "Health-Check",
-        "CheckDoctrine",
-        "CheckRedis",
-        "CheckRabbitmq"
+        "healthcheck",
+        "doctrine",
+        "Symfony-Health-Check",
+        "Symfony-Health-Check-Bundle",
+        "Symfony-Health-Check-Doctrine"
     ],
     "license": "MIT",
     "authors": [
