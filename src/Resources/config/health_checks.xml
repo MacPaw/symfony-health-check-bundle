@@ -8,5 +8,6 @@
 
         <service id="symfony_health_check_bundle.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineCheck"/>
         <service id="symfony_health_check_bundle.environment_check" class="SymfonyHealthCheckBundle\Check\EnvironmentCheck"/>
+        <service id="symfony_health_check_bundle.status_check" class="SymfonyHealthCheckBundle\Check\StatusUpCheck"/>
     </services>
 </container>
