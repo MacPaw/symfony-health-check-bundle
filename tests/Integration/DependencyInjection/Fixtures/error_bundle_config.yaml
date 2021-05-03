@@ -1,0 +1,3 @@
+symfony_health_check:
+    health_checks:
+        - id: not_exists.check
