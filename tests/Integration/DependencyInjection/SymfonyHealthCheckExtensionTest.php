@@ -35,9 +35,9 @@ class SymfonyHealthCheckExtensionTest extends TestCase
 
         self::assertCount(5, $container->getDefinitions());
         self::assertArrayHasKey('SymfonyHealthCheckBundle\Controller\HealthController', $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check_bundle.doctrine_check', $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check_bundle.environment_check', $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check_bundle.status_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check.doctrine_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check.environment_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check.status_up_check', $container->getDefinitions());
     }
 
     private function createContainerFromFixture(string $fixtureFile): ContainerBuilder
@@ -60,11 +60,5 @@ class SymfonyHealthCheckExtensionTest extends TestCase
     {
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/Fixtures'));
         $loader->load($fixtureFile . '.yaml');
-    }
-
-    private function assertDefinitionMethodCall(array $methodCall, string $method, array $arguments): void
-    {
-        self::assertSame($method, $methodCall[0]);
-        self::assertEquals($arguments, $methodCall[1]);
     }
 }

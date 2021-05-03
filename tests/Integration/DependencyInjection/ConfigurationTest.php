@@ -23,10 +23,10 @@ final class ConfigurationTest extends TestCase
     {
         $expectedConfig = [
             'health_checks' => [
-                ['id' => 'symfony_health_check_bundle.doctrine_check'],
+                ['id' => 'symfony_health_check.doctrine_check'],
             ]
         ];
-        $new = ['health_checks' => [['id' => 'symfony_health_check_bundle.doctrine_check']]];
+        $new = ['health_checks' => [['id' => 'symfony_health_check.doctrine_check']]];
 
         self::assertSame(
             $expectedConfig,
