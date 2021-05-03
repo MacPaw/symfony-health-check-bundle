@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SentryMonologAdapter\Tests\Integration\DependencyInjection;
+namespace SymfonyHealthCheckBundle\Tests\Integration\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use SymfonyHealthCheckBundle\DependencyInjection\SymfonyHealthCheckExtension;
 use Throwable;
+use SymfonyHealthCheckBundle\Controller\HealthController;
 
 class SymfonyHealthCheckExtensionTest extends TestCase
 {
@@ -34,7 +35,7 @@ class SymfonyHealthCheckExtensionTest extends TestCase
         $container = $this->createContainerFromFixture('filled_bundle_config');
 
         self::assertCount(5, $container->getDefinitions());
-        self::assertArrayHasKey('SymfonyHealthCheckBundle\Controller\HealthController', $container->getDefinitions());
+        self::assertArrayHasKey(HealthController::class, $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check.doctrine_check', $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check.environment_check', $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check.status_up_check', $container->getDefinitions());
