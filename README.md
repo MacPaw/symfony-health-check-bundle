@@ -92,10 +92,6 @@ declare(strict_types=1);
 
 namespace YourProject\Check;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use SymfonyHealthCheckBundle\Exception\ServiceNotFoundException;
-use Throwable;
-
 class CustomCheck implements CheckInterface
 {
     private const CHECK_RESULT_KEY = 'customConnection';
@@ -112,6 +108,6 @@ Then we add our custom health check to collection
 ```yaml
 symfony_health_check:
     health_checks:
-        - id: symfony_health_check_bundle.doctrine_check
+        - id: symfony_health_check.doctrine_check
         - id: custom_health_check
 ```
