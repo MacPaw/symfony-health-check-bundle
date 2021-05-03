@@ -14,7 +14,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder('symfony_health_check');
 
-        /** @var ArrayNodeDefinition $rootNode */
+        /** @var ArrayNodeDefinition $root */
         $root = method_exists(TreeBuilder::class, 'getRootNode')
             ? $treeBuilder->getRootNode()
             : $treeBuilder->root('symfony_health_check');
