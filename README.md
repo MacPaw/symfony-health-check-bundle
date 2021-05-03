@@ -1,6 +1,11 @@
 Symfony Health Check Bundle
 =================================
 
+| Version | Build Status | Code Coverage |
+|:---------:|:-------------:|:-----:|
+| `master`| [![CI][master Build Status Image]][master Build Status] | [![Coverage Status][master Code Coverage Image]][master Code Coverage] |
+| `develop`| [![CI][develop Build Status Image]][develop Build Status] | [![Coverage Status][develop Code Coverage Image]][develop Code Coverage] |
+
 Installation
 ============
 
@@ -111,3 +116,12 @@ symfony_health_check:
         - id: symfony_health_check.doctrine_check
         - id: custom_health_check
 ```
+
+[master Build Status]: https://github.com/macpaw/symfony-health-check-bundle/actions?query=workflow%3ACI+branch%3Amaster
+[master Build Status Image]: https://github.com/macpaw/symfony-health-check-bundle/workflows/CI/badge.svg?branch=master
+[develop Build Status]: https://github.com/macpaw/symfony-health-check-bundle/actions?query=workflow%3ACI+branch%3Adevelop
+[develop Build Status Image]: https://github.com/macpaw/symfony-health-check-bundle/workflows/CI/badge.svg?branch=develop
+[master Code Coverage]: https://codecov.io/gh/macpaw/symfony-health-check-bundle/branch/master
+[master Code Coverage Image]: https://img.shields.io/codecov/c/github/macpaw/symfony-health-check-bundle/master?logo=codecov
+[develop Code Coverage]: https://codecov.io/gh/macpaw/symfony-health-check-bundle/branch/develop
+[develop Code Coverage Image]: https://img.shields.io/codecov/c/github/macpaw/symfony-health-check-bundle/develop?logo=codecov
