@@ -34,7 +34,7 @@
     "require-dev": {
         "phpstan/phpstan": "0.12.*",
         "squizlabs/php_codesniffer": "3.5.*",
-        "symfony/phpunit-bridge": "^3.4 || ^4.0 || ^5.0",
+        "symfony/phpunit-bridge": "^3.4 || ^4.1.12 || ^5.0",
         "phpunit/phpunit": "^8.5 || ^9.0",
         "symfony/yaml": "^3.4 || ^4.0 || ^5.0"
     },
