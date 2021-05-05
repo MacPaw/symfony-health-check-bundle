@@ -6,6 +6,7 @@
     "keywords": [
         "MacPaw",
         "Symfony",
+        "monitoring",
         "healthcheck",
         "doctrine",
         "Symfony-Health-Check",
