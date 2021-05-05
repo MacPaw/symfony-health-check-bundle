@@ -70,6 +70,15 @@ symfony_health_check:
         - id: symfony_health_check.doctrine_check
 ```
 
+Create Symfony Health Check Bundle Routing Config:
+----------------------------------
+`config/routes/symfony_health_check.yaml`
+
+```yaml
+health-check:
+    resource: '@SymfonyHealthCheckBundle/Resources/config/routes.xml'
+```
+
 Step 3: Configuration
 =============
 
@@ -88,6 +97,9 @@ If you are using [symfony/security](https://symfony.com/doc/current/security.htm
 
 Step 4: Additional settings
 =============
+
+Add Custom Check:
+----------------------------------
 It is possible to add your custom health check:
 
 ```php
@@ -115,6 +127,17 @@ symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
         - id: custom_health_check
+```
+
+How Change Route:
+----------------------------------
+You can change the default behavior with a light configuration, remember to return to Step 3 after that:
+```yaml
+health:
+    path: /your/custom/url
+    methods: GET
+    controller: SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction
+
 ```
 
 [master Build Status]: https://github.com/macpaw/symfony-health-check-bundle/actions?query=workflow%3ACI+branch%3Amaster
