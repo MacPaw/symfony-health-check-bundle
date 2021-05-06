@@ -15,7 +15,7 @@ use TypeError;
 
 class HealthControllerTest extends WebTestCase
 {
-    public function testSomething(): void
+    public function testSuccess(): void
     {
         $client = static::createClient();
         $client->request('GET', '/health');
@@ -25,7 +25,7 @@ class HealthControllerTest extends WebTestCase
         self::assertSame(json_encode([]), $response->getContent());
     }
 
-    public function testAddCheckStatusUp(): void
+    public function testAddCheckStatusUpSuccess(): void
     {
         $healthController = new HealthController();
         $healthController->addHealthCheck(new StatusUpCheck());
@@ -60,7 +60,7 @@ class HealthControllerTest extends WebTestCase
         $healthController->healthCheckAction();
     }
 
-    public function testTwoCheck(): void
+    public function testTwoCheckSuccess(): void
     {
         $healthController = new HealthController();
         $healthController->addHealthCheck(new StatusUpCheck());
@@ -71,6 +71,19 @@ class HealthControllerTest extends WebTestCase
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
             json_encode([['status' => 'up'], ['name' => 'environment', 'environment' => 'Could not determine']]),
+            $response->getContent()
+        );
+    }
+    
+    public function testEnvironmentCheckSuccess(): void
+    {
+        $healthController = new HealthController();
+        $healthController->addHealthCheck(new EnvironmentCheck(static::bootKernel()->getContainer()));
+        $response = $healthController->healthCheckAction();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(
+            json_encode([['name' => 'environment', 'environment' => 'testing']]),
             $response->getContent()
         );
     }
