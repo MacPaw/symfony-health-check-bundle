@@ -1,6 +1,7 @@
 .idea
 build
 vendor
+var
 /composer.lock
 /.phpcs-cache
 

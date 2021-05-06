@@ -1,0 +1,5 @@
+framework:
+    secret: secret
+    router:
+        resource: "%kernel.project_dir%/Resources/config/routes.xml"
+    test: ~

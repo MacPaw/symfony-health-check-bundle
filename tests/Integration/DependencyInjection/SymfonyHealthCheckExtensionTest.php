@@ -33,7 +33,7 @@ class SymfonyHealthCheckExtensionTest extends TestCase
     public function testNotExistServiceConfig(): void
     {
         try {
-            $container = $this->createContainerFromFixture('error_bundle_config');
+            $this->createContainerFromFixture('error_bundle_config');
         } catch (Throwable $exception) {
             self::assertInstanceOf(ServiceNotFoundException::class, $exception);
             self::assertSame(
