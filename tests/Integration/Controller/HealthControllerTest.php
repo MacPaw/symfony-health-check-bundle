@@ -74,7 +74,7 @@ class HealthControllerTest extends WebTestCase
             $response->getContent()
         );
     }
-    
+
     public function testEnvironmentCheckSuccess(): void
     {
         $healthController = new HealthController();
