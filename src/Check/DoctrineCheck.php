@@ -10,7 +10,7 @@ use Throwable;
 
 class DoctrineCheck implements CheckInterface
 {
-    private const CHECK_RESULT_KEY = 'doctrineConnection';
+    private const CHECK_RESULT_KEY = 'connection';
 
     private ContainerInterface $container;
 
@@ -24,6 +24,7 @@ class DoctrineCheck implements CheckInterface
      */
     public function check(): array
     {
+        $result = ['name' => 'doctrine'];
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         if ($entityManager === null) {
@@ -33,9 +34,9 @@ class DoctrineCheck implements CheckInterface
         try {
             $entityManager->getConnection()->ping();
         } catch (Throwable $e) {
-            return [self::CHECK_RESULT_KEY => false];
+            return array_merge($result, [self::CHECK_RESULT_KEY => false]);
         }
 
-        return [self::CHECK_RESULT_KEY => true];
+        return array_merge($result, [self::CHECK_RESULT_KEY => true]);
     }
 }
