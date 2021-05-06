@@ -25,6 +25,11 @@ class DoctrineCheck implements CheckInterface
     public function check(): array
     {
         $result = ['name' => 'doctrine'];
+
+        if ($this->container->has('doctrine.orm.entity_manager') === false) {
+            throw new ServiceNotFoundException('Entity Manager Not Found.');
+        }
+
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         if ($entityManager === null) {

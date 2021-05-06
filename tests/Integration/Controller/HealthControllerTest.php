@@ -6,11 +6,11 @@ namespace SymfonyHealthCheckBundle\Tests\Integration\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use SymfonyHealthCheckBundle\Check\DoctrineCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
 use SymfonyHealthCheckBundle\Controller\HealthController;
+use SymfonyHealthCheckBundle\Exception\ServiceNotFoundException;
 use TypeError;
 
 class HealthControllerTest extends WebTestCase
