@@ -60,6 +60,18 @@ class HealthControllerTest extends WebTestCase
         $healthController->healthCheckAction();
     }
 
+    public function testDoctrineCheckGetParameters(): void
+    {
+        $healthController = new HealthController();
+        $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
+
+        try {
+            $healthController->healthCheckAction();
+        } catch (ServiceNotFoundException $exception) {
+            self::assertSame(["class" => "doctrine.orm.entity_manager"], $exception->getParameters());
+        }
+    }
+
     public function testTwoCheckSuccess(): void
     {
         $healthController = new HealthController();
