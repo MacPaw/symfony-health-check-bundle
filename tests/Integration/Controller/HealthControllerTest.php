@@ -13,8 +13,6 @@ class HealthControllerTest extends WebTestCase
         $client = static::createClient();
         $client->request('GET', '/health');
 
-        self::assertResponseIsSuccessful();
-
         $response = $client->getResponse();
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(json_encode([]), $response->getContent());
