@@ -18,7 +18,7 @@ abstract class AbstractException extends Exception implements ParameterException
      * AbstractException constructor.
      *
      * @param string         $message
-     * @param iterable[]     $parameters
+     * @param array<mixed>   $parameters
      * @param int            $code
      * @param Throwable|null $previous
      */
