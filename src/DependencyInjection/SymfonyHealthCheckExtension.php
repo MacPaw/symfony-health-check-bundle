@@ -6,6 +6,7 @@ namespace SymfonyHealthCheckBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use SymfonyHealthCheckBundle\Controller\HealthController;
@@ -40,7 +41,7 @@ class SymfonyHealthCheckExtension extends Extension
 
         $healthCheckCollection = $container->findDefinition(HealthController::class);
         foreach ($config['health_checks'] as $healthCheckConfig) {
-            $healthCheckDefinition = $container->findDefinition($healthCheckConfig['id']);
+            $healthCheckDefinition = new Reference($healthCheckConfig['id']);
             $healthCheckCollection->addMethodCall('addHealthCheck', [$healthCheckDefinition]);
         }
     }
