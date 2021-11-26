@@ -58,8 +58,15 @@ jobs:
                   key: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.symfony-versions }}-composer-${{ hashFiles('composer.json') }}
                   restore-keys: ${{ runner.os }}-${{ matrix.php }}-${{ matrix.symfony-versions }}-composer
 
-            - name: Install dependencies
-              run: composer require "symfony/symfony:${{ matrix.symfony-versions }}" --no-update
+            -
+                name: Update Symfony version
+                if: matrix.symfony != ''
+                run: |
+                    composer require symfony/framework-bundle:${{ matrix.symfony-versions }} --no-update --no-scripts
+
+                    composer require --dev symfony/phpunit-bridge:${{ matrix.symfony-versions }} --no-update --no-scripts
+                    composer require --dev symfony/yaml:${{ matrix.symfony-versions }} --no-update --no-scripts
+                    composer require --dev symfony/browser-kit:${{ matrix.symfony-versions }} --no-update --no-scripts
 
             - name: Install dependencies
               run: composer install
