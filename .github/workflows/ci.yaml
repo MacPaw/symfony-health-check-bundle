@@ -24,7 +24,7 @@ jobs:
                     - '5.3.*'
                 include:
                     - description: 'Log Code Coverage'
-                      php: '8.0'
+                      php: '8.1'
                       coverage: 'xdebug'
                       symfony-versions: '^5.2'
 
