@@ -5,9 +5,12 @@
     http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <defaults autowire="true" autoconfigure="true" public="true" />
-
-        <service id="symfony_health_check.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineCheck"/>
-        <service id="symfony_health_check.environment_check" class="SymfonyHealthCheckBundle\Check\EnvironmentCheck"/>
+        <service id="symfony_health_check.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineCheck">
+            <argument type="service" id="service_container"/>
+        </service>
+        <service id="symfony_health_check.environment_check" class="SymfonyHealthCheckBundle\Check\EnvironmentCheck">
+            <argument type="service" id="service_container"/>
+        </service>
         <service id="symfony_health_check.status_up_check" class="SymfonyHealthCheckBundle\Check\StatusUpCheck"/>
     </services>
 </container>

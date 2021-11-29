@@ -30,19 +30,6 @@ class SymfonyHealthCheckExtensionTest extends TestCase
         }
     }
 
-    public function testNotExistServiceConfig(): void
-    {
-        try {
-            $this->createContainerFromFixture('error_bundle_config');
-        } catch (Throwable $exception) {
-            self::assertInstanceOf(ServiceNotFoundException::class, $exception);
-            self::assertSame(
-                'You have requested a non-existent service "not_exists.check".',
-                $exception->getMessage()
-            );
-        }
-    }
-
     public function testWithFullConfig(): void
     {
         $container = $this->createContainerFromFixture('filled_bundle_config');
