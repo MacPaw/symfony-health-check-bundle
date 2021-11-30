@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.4.0...v0.5.0) (2021-11-30)
+
+
+### Features
+
+* add support sumfony 54 ([d98d4d4](https://github.com/MacPaw/symfony-health-check-bundle/commit/d98d4d4d8e1e36dc50c212032f4fcec88f7c2fb1))
+* add support sumfony 60 ([76c9a55](https://github.com/MacPaw/symfony-health-check-bundle/commit/76c9a55c924de69507c443b04900d6b5f02c6440))
+* add support sumfony 60 ([73a51da](https://github.com/MacPaw/symfony-health-check-bundle/commit/73a51da0f880eae8780b14e4cc0933a1f493ddfd))
+
 ## [0.4.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.3.0...v0.4.0) (2021-11-30)
 
 
