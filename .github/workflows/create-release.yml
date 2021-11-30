@@ -21,6 +21,6 @@ jobs:
               run: npm install && npm install --save-dev semantic-release @semantic-release/changelog @semantic-release/git -D
             - name: Release
               env:
-                  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GH_TOKEN: ${{ secrets.PACKAGIST_PUBLIC_RELEASE_GH }}
+                  GITHUB_TOKEN: ${{ secrets.PACKAGIST_PUBLIC_RELEASE_GH }}
               run: npx semantic-release
