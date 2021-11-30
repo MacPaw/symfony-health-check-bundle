@@ -23,6 +23,7 @@ jobs:
                     - '5.2.*'
                     - '5.3.*'
                     - '5.4.*'
+                    - '6.0.*'
                 include:
                     - description: 'Log Code Coverage'
                       php: '8.1'
