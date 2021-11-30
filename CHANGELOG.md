@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.4.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.3.0...v0.4.0) (2021-11-30)
+
+
+### Features
+
+* change token for release ([7c63d6f](https://github.com/MacPaw/symfony-health-check-bundle/commit/7c63d6f442cd1a907b456d43795691510373aef3))
+* deprecation message autowiring alias ContainerInterface ([a110918](https://github.com/MacPaw/symfony-health-check-bundle/commit/a110918387cfec9c9e555ceff26941ceb70135fb))
+
+
+### Bug Fixes
+
+* remove test after change load service in collection ([d5bfc28](https://github.com/MacPaw/symfony-health-check-bundle/commit/d5bfc282ebc049b510ad90ed6ef882195096ee74))
+
 ## [0.3.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.2.0...v0.3.0) (2021-11-29)
 
 
