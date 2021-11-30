@@ -23,8 +23,11 @@ jobs:
                     - '5.2.*'
                     - '5.3.*'
                     - '5.4.*'
-                    - '6.0.*'
                 include:
+                    - php: '8.0'
+                      symfony-versions: '^6.0'
+                    - php: '8.1'
+                      symfony-versions: '^6.0'
                     - description: 'Log Code Coverage'
                       php: '8.1'
                       coverage: 'xdebug'
