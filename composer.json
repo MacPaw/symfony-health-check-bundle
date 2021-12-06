@@ -52,6 +52,9 @@
         }
     },
     "scripts": {
+        "composer-validate": [
+            "composer validate"
+        ],
         "cs": [
             "vendor/bin/phpcs"
         ],
