@@ -42,7 +42,8 @@ class DoctrineCheck implements CheckInterface
         }
 
         try {
-            $entityManager->getConnection()->ping();
+            $con = $entityManager->getConnection();
+            $con->executeQuery($con->getDatabasePlatform()->getDummySelectSQL())->free();
         } catch (Throwable $e) {
             return array_merge($result, [self::CHECK_RESULT_KEY => false]);
         }
