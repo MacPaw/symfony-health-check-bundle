@@ -6,8 +6,13 @@ namespace SymfonyHealthCheckBundle\Tests\Integration\Mock;
 
 class ConnectionMock
 {
-    public function ping(): bool
+    public function getDatabasePlatform(): AbstractPlatformMock
     {
-        return true;
+        return new AbstractPlatformMock();
+    }
+
+    public function executeQuery(): ExecuteQueryMock
+    {
+        return new ExecuteQueryMock();
     }
 }

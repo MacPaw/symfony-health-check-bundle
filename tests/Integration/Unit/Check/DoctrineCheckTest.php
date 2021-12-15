@@ -104,7 +104,7 @@ class DoctrineCheckTest extends TestCase
             ->willReturn($connectionMock);
 
         $connectionMock
-            ->method('ping')
+            ->method('getDatabasePlatform')
             ->with()
             ->will(self::throwException(new Exception()));
 
