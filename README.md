@@ -109,13 +109,13 @@ declare(strict_types=1);
 
 namespace YourProject\Check;
 
+use SymfonyHealthCheckBundle\Dto\Response;
+
 class CustomCheck implements CheckInterface
 {
-    private const CHECK_RESULT_KEY = 'customConnection';
-    
-    public function check(): array
+    public function check(): Response
     {
-        return [self::CHECK_RESULT_KEY => true];
+        return new Response('status', true, 'up');
     }
 }
 ```
