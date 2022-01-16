@@ -48,7 +48,7 @@ class Response
     {
         return $this->params;
     }
-    
+
     /**
      * @return mixed[]
      */
