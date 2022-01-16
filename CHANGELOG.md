@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.6.0...v0.7.0) (2021-12-15)
+
+
+### Features
+
+* add run phpunit for symfony 6 ([3412343](https://github.com/MacPaw/symfony-health-check-bundle/commit/3412343e48466c7c50b57319eef8d188b7011268))
+* composer validate ([6edce2d](https://github.com/MacPaw/symfony-health-check-bundle/commit/6edce2d4010fc17c5ccd7917fff9efd33f1b5e1c))
+* fix use deprecated dbal connection function ping ([7322e50](https://github.com/MacPaw/symfony-health-check-bundle/commit/7322e50a68fa5dc9ad3d1b245d5c6130ca78c0ef))
+* update phpunit test for new check connection doctrine ([644bdb9](https://github.com/MacPaw/symfony-health-check-bundle/commit/644bdb97d47499631f02ae607750661347631b87))
+
 ## [0.6.0](https://github.com/MacPaw/symfony-health-check-bundle/compare/v0.5.0...v0.6.0) (2021-11-30)
 
 
