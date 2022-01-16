@@ -10,7 +10,6 @@ use SymfonyHealthCheckBundle\Check\DoctrineCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
 use SymfonyHealthCheckBundle\Controller\HealthController;
-use SymfonyHealthCheckBundle\Exception\ServiceNotFoundException;
 use TypeError;
 
 class HealthControllerTest extends WebTestCase
@@ -33,7 +32,12 @@ class HealthControllerTest extends WebTestCase
         $response = $healthController->healthCheckAction();
 
         self::assertSame(200, $response->getStatusCode());
-        self::assertSame(json_encode([['status' => 'up']]), $response->getContent());
+        self::assertSame(
+            json_encode([[
+                'name' => 'status', 'result' => true, 'message' => 'up', 'params' => [],
+            ]]),
+            $response->getContent()
+        );
     }
 
     public function testEnvironmentCheckCouldNotDetermine(): void
@@ -45,31 +49,32 @@ class HealthControllerTest extends WebTestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
-            json_encode([['name' => 'environment', 'environment' => 'Could not determine']]),
+            json_encode([[
+                'name' => 'environment',
+                'result' => false,
+                'message' => 'Could not determine',
+                'params' => []
+            ]]),
             $response->getContent()
         );
     }
 
     public function testDoctrineCheckServiceNotFoundException(): void
     {
-        self::expectException(ServiceNotFoundException::class);
-
         $healthController = new HealthController();
         $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
 
-        $healthController->healthCheckAction();
-    }
-
-    public function testDoctrineCheckGetParameters(): void
-    {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
-
-        try {
-            $healthController->healthCheckAction();
-        } catch (ServiceNotFoundException $exception) {
-            self::assertSame(["class" => "doctrine.orm.entity_manager"], $exception->getParameters());
-        }
+        $response = $healthController->healthCheckAction();
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(
+            json_encode([[
+                'name' => 'doctrine',
+                'result' => false,
+                'message' => 'Entity Manager Not Found.',
+                'params' => []
+            ]]),
+            $response->getContent()
+        );
     }
 
     public function testTwoCheckSuccess(): void
@@ -82,7 +87,19 @@ class HealthControllerTest extends WebTestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
-            json_encode([['status' => 'up'], ['name' => 'environment', 'environment' => 'Could not determine']]),
+            json_encode([
+                [
+                    'name' => 'status',
+                    'result' => true,
+                    'message' => 'up',
+                    'params' => [],
+                ],
+                [
+                    'name' => 'environment',
+                    'result' => false,
+                    'message' => 'Could not determine',
+                    'params' => []
+                ]]),
             $response->getContent()
         );
     }
@@ -95,7 +112,14 @@ class HealthControllerTest extends WebTestCase
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
-            json_encode([['name' => 'environment', 'environment' => 'testing']]),
+            json_encode([
+                [
+                    'name' => 'environment',
+                    'result' => true,
+                    'message' => 'ok',
+                    'params' => ['testing']
+                ]
+            ]),
             $response->getContent()
         );
     }

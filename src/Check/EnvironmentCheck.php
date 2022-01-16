@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Check;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use SymfonyHealthCheckBundle\Dto\Response;
 use Throwable;
 
 class EnvironmentCheck implements CheckInterface
@@ -18,16 +19,14 @@ class EnvironmentCheck implements CheckInterface
         $this->container = $container;
     }
 
-    public function check(): array
+    public function check(): Response
     {
-        $result = ['name' => self::CHECK_RESULT_KEY];
-
         try {
             $env = $this->container->getParameter('kernel.environment');
         } catch (Throwable $e) {
-            return array_merge($result, [self::CHECK_RESULT_KEY => 'Could not determine']);
+            return new Response(self::CHECK_RESULT_KEY, false, 'Could not determine');
         }
 
-        return array_merge($result, [self::CHECK_RESULT_KEY => $env]);
+        return new Response(self::CHECK_RESULT_KEY, true, 'ok', [$env]);
     }
 }

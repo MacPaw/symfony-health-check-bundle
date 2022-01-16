@@ -33,7 +33,7 @@ final class HealthController extends AbstractController
     {
         $resultHealthCheck = [];
         foreach ($this->healthChecks as $healthCheck) {
-            $resultHealthCheck[] = $healthCheck->check();
+            $resultHealthCheck[] = $healthCheck->check()->toArray();
         }
 
         return new JsonResponse($resultHealthCheck, Response::HTTP_OK);
