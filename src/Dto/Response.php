@@ -48,7 +48,10 @@ class Response
     {
         return $this->params;
     }
-
+    
+    /**
+     * @return mixed[]
+     */
     public function toArray(): array
     {
         return [
