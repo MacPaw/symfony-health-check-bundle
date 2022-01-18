@@ -2,29 +2,17 @@
 
 declare(strict_types=1);
 
-namespace SymfonyHealthCheckBundle\Tests\Integration\Unit\Check;
+namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Check\DoctrineCheck;
-use SymfonyHealthCheckBundle\Check\StatusUpCheck;
-use SymfonyHealthCheckBundle\Exception\ServiceNotFoundException;
-use SymfonyHealthCheckBundle\Tests\Integration\Mock\ConnectionMock;
-use SymfonyHealthCheckBundle\Tests\Integration\Mock\EntityManagerMock;
+use SymfonyHealthCheckBundle\Tests\Mock\ConnectionMock;
+use SymfonyHealthCheckBundle\Tests\Mock\EntityManagerMock;
 
 class DoctrineCheckTest extends TestCase
 {
-    public function testStatusUpCheckSuccess(): void
-    {
-        $result = (new StatusUpCheck())->check();
-
-        self::assertIsArray($result);
-        self::assertNotEmpty($result);
-        self::assertArrayHasKey('status', $result);
-        self::assertSame('up', $result['status']);
-    }
-
     public function testDoctrineHasNotFoundException(): void
     {
         $container = $this->createMock(ContainerInterface::class);
@@ -34,12 +22,22 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn(false);
 
-        $this->expectException(ServiceNotFoundException::class);
-        $this->expectExceptionMessage('Entity Manager Not Found.');
-
         $doctrine = new DoctrineCheck($container);
 
-        $doctrine->check();
+        $result = $doctrine->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('doctrine', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Entity Manager Not Found.', $result['message']);
+        self::assertIsArray($result['params']);
     }
 
     public function testDoctrineGetNotFoundException(): void
@@ -56,12 +54,22 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn(null);
 
-        $this->expectException(ServiceNotFoundException::class);
-        $this->expectExceptionMessage('Entity Manager Not Found.');
-
         $doctrine = new DoctrineCheck($container);
 
-        $doctrine->check();
+        $result = $doctrine->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('doctrine', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Entity Manager Not Found.', $result['message']);
+        self::assertIsArray($result['params']);
     }
 
     public function testDoctrineSuccess(): void
@@ -81,15 +89,20 @@ class DoctrineCheckTest extends TestCase
 
         $doctrine = new DoctrineCheck($container);
 
-        $result = $doctrine->check();
+        $result = $doctrine->check()->toArray();
 
         self::assertIsArray($result);
         self::assertNotEmpty($result);
+
         self::assertArrayHasKey('name', $result);
-        self::assertArrayHasKey('connection', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
         self::assertSame('doctrine', $result['name']);
-        self::assertIsBool($result['connection']);
-        self::assertTrue($result['connection']);
+        self::assertTrue($result['result']);
+        self::assertSame('ok', $result['message']);
+        self::assertIsArray($result['params']);
     }
 
     public function testDoctrineFailPing(): void
@@ -106,7 +119,7 @@ class DoctrineCheckTest extends TestCase
         $connectionMock
             ->method('getDatabasePlatform')
             ->with()
-            ->will(self::throwException(new Exception()));
+            ->will(self::throwException(new Exception('failed getDatabasePlatform')));
 
         $container
             ->method('has')
@@ -120,14 +133,19 @@ class DoctrineCheckTest extends TestCase
 
         $doctrine = new DoctrineCheck($container);
 
-        $result = $doctrine->check();
+        $result = $doctrine->check()->toArray();
 
         self::assertIsArray($result);
         self::assertNotEmpty($result);
+
         self::assertArrayHasKey('name', $result);
-        self::assertArrayHasKey('connection', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
         self::assertSame('doctrine', $result['name']);
-        self::assertIsBool($result['connection']);
-        self::assertFalse($result['connection']);
+        self::assertFalse($result['result']);
+        self::assertSame('failed getDatabasePlatform', $result['message']);
+        self::assertIsArray($result['params']);
     }
 }

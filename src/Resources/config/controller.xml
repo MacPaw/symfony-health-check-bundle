@@ -9,5 +9,8 @@
         <service public="true" id="SymfonyHealthCheckBundle\Controller\HealthController" class="SymfonyHealthCheckBundle\Controller\HealthController">
             <tag name="container.service_subscriber" />
         </service>
+        <service public="true" id="SymfonyHealthCheckBundle\Controller\PingController" class="SymfonyHealthCheckBundle\Controller\PingController">
+            <tag name="container.service_subscriber" />
+        </service>
     </services>
 </container>
