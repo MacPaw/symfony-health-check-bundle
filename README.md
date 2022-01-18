@@ -139,6 +139,11 @@ health:
     path: /your/custom/url
     methods: GET
     controller: SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction
+    
+ping:
+    path: /your/custom/url
+    methods: GET
+    controller: SymfonyHealthCheckBundle\Controller\PingController::pingAction
 
 ```
 
