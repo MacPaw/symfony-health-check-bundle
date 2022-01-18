@@ -9,15 +9,15 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use SymfonyHealthCheckBundle\Check\DoctrineCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
-use SymfonyHealthCheckBundle\Controller\HealthController;
+use SymfonyHealthCheckBundle\Controller\PingController;
 use TypeError;
 
-class HealthControllerTest extends WebTestCase
+class PingControllerTest extends WebTestCase
 {
     public function testSuccess(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/health');
+        $client->request('GET', '/ping');
 
         $response = $client->getResponse();
         self::assertSame(200, $response->getStatusCode());
@@ -26,10 +26,10 @@ class HealthControllerTest extends WebTestCase
 
     public function testAddCheckStatusUpSuccess(): void
     {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new StatusUpCheck());
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new StatusUpCheck());
 
-        $response = $healthController->healthCheckAction();
+        $response = $pingController->pingAction();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -42,10 +42,10 @@ class HealthControllerTest extends WebTestCase
 
     public function testEnvironmentCheckCouldNotDetermine(): void
     {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $pingController->pingAction();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -61,10 +61,10 @@ class HealthControllerTest extends WebTestCase
 
     public function testDoctrineCheckServiceNotFoundException(): void
     {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $pingController->pingAction();
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
             json_encode([[
@@ -79,11 +79,11 @@ class HealthControllerTest extends WebTestCase
 
     public function testTwoCheckSuccess(): void
     {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new StatusUpCheck());
-        $healthController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new StatusUpCheck());
+        $pingController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $pingController->pingAction();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -106,9 +106,9 @@ class HealthControllerTest extends WebTestCase
 
     public function testEnvironmentCheckSuccess(): void
     {
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new EnvironmentCheck(static::bootKernel()->getContainer()));
-        $response = $healthController->healthCheckAction();
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new EnvironmentCheck(static::bootKernel()->getContainer()));
+        $response = $pingController->pingAction();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -128,7 +128,7 @@ class HealthControllerTest extends WebTestCase
     {
         self::expectException(TypeError::class);
 
-        $healthController = new HealthController();
-        $healthController->addHealthCheck(new HealthController());
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new PingController());
     }
 }

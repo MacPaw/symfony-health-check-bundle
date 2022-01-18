@@ -68,6 +68,8 @@ Configurating health check - all available you can see [here](https://github.com
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
+    ping_checks:
+        - id: symfony_health_check.status_up_check
 ```
 
 Create Symfony Health Check Bundle Routing Config:
@@ -93,6 +95,9 @@ If you are using [symfony/security](https://symfony.com/doc/current/security.htm
         healthcheck:
             pattern: ^/health
             security: false
+        ping:
+            pattern: ^/ping
+            security: false
 ```
 
 Step 4: Additional settings
@@ -109,13 +114,13 @@ declare(strict_types=1);
 
 namespace YourProject\Check;
 
+use SymfonyHealthCheckBundle\Dto\Response;
+
 class CustomCheck implements CheckInterface
 {
-    private const CHECK_RESULT_KEY = 'customConnection';
-    
-    public function check(): array
+    public function check(): Response
     {
-        return [self::CHECK_RESULT_KEY => true];
+        return new Response('status', true, 'up');
     }
 }
 ```
@@ -126,7 +131,7 @@ Then we add our custom health check to collection
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
-        - id: custom_health_check
+        - id: custom_health_check // custom service check id
 ```
 
 How Change Route:
@@ -137,6 +142,11 @@ health:
     path: /your/custom/url
     methods: GET
     controller: SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction
+    
+ping:
+    path: /your/custom/url
+    methods: GET
+    controller: SymfonyHealthCheckBundle\Controller\PingController::pingAction
 
 ```
 

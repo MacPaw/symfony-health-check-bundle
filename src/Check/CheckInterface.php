@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Check;
 
+use SymfonyHealthCheckBundle\Dto\Response;
+
 interface CheckInterface
 {
-    /**
-     * @return array<string, mixed>
-     */
-    public function check(): array;
+    public function check(): Response;
 }

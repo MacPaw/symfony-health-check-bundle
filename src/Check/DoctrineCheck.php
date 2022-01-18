@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Check;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use SymfonyHealthCheckBundle\Exception\ServiceNotFoundException;
+use SymfonyHealthCheckBundle\Dto\Response;
 use Throwable;
 
 class DoctrineCheck implements CheckInterface
 {
-    private const CHECK_RESULT_KEY = 'connection';
+    private const CHECK_RESULT_NAME = 'doctrine';
 
     private ContainerInterface $container;
 
@@ -19,35 +19,25 @@ class DoctrineCheck implements CheckInterface
         $this->container = $container;
     }
 
-    /**
-     * @throws ServiceNotFoundException
-     */
-    public function check(): array
+    public function check(): Response
     {
-        $result = ['name' => 'doctrine'];
-
         if ($this->container->has('doctrine.orm.entity_manager') === false) {
-            throw new ServiceNotFoundException(
-                'Entity Manager Not Found.',
-                [
-                    'class' => 'doctrine.orm.entity_manager',
-                ]
-            );
+            return new Response(self::CHECK_RESULT_NAME, false, 'Entity Manager Not Found.');
         }
 
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         if ($entityManager === null) {
-            throw new ServiceNotFoundException('Entity Manager Not Found.');
+            return new Response(self::CHECK_RESULT_NAME, false, 'Entity Manager Not Found.');
         }
 
         try {
             $con = $entityManager->getConnection();
             $con->executeQuery($con->getDatabasePlatform()->getDummySelectSQL())->free();
         } catch (Throwable $e) {
-            return array_merge($result, [self::CHECK_RESULT_KEY => false]);
+            return new Response(self::CHECK_RESULT_NAME, false, $e->getMessage());
         }
 
-        return array_merge($result, [self::CHECK_RESULT_KEY => true]);
+        return new Response(self::CHECK_RESULT_NAME, true, 'ok');
     }
 }

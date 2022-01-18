@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SymfonyHealthCheckBundle\Tests\Integration\Mock;
+namespace SymfonyHealthCheckBundle\Tests\Mock;
 
 class EntityManagerMock
 {
