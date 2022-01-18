@@ -95,6 +95,9 @@ If you are using [symfony/security](https://symfony.com/doc/current/security.htm
         healthcheck:
             pattern: ^/health
             security: false
+        ping:
+            pattern: ^/ping
+            security: false
 ```
 
 Step 4: Additional settings
