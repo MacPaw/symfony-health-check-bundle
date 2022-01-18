@@ -68,6 +68,8 @@ Configurating health check - all available you can see [here](https://github.com
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
+    ping_checks:
+        - id: symfony_health_check.status_up_check
 ```
 
 Create Symfony Health Check Bundle Routing Config:
@@ -126,7 +128,7 @@ Then we add our custom health check to collection
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
-        - id: custom_health_check
+        - id: custom_health_check // custom service check id
 ```
 
 How Change Route:
