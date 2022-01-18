@@ -10,4 +10,10 @@
         controller="SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction"
         methods="GET"
     />
+    <route
+        id="ping"
+        path="/ping"
+        controller="SymfonyHealthCheckBundle\Controller\PingController::pingAction"
+        methods="GET"
+    />
 </routes>
