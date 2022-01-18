@@ -82,3 +82,35 @@ Security Optional:
             security: false
 ```
 
+Step 3: Update Custom Health Check
+----------------------------------
+We need change return type array -> Response class
+
+
+### Old:
+```
+use SymfonyHealthCheckBundle\Dto\Response;
+
+class StatusUpCheck implements CheckInterface
+{
+    public function check(): array
+    {
+        return ['status' => 'up'];
+    }
+}
+```
+
+### New:
+```
+use SymfonyHealthCheckBundle\Dto\Response;
+
+class StatusUpCheck implements CheckInterface
+{
+    public function check(): Response
+    {
+        return new Response('status', true, 'up');
+    }
+}
+```
+
+
