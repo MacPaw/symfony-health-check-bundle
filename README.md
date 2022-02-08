@@ -150,6 +150,12 @@ ping:
 
 ```
 
+How To Use Healthcheck In Docker
+----------------------------------
+```dockerfile
+HEALTHCHECK --start-period=15s --interval=5s --timeout=3s --retries=3 CMD curl -sS {{your host}}/health || exit 1
+```
+
 [master Build Status]: https://github.com/macpaw/symfony-health-check-bundle/actions?query=workflow%3ACI+branch%3Amaster
 [master Build Status Image]: https://github.com/macpaw/symfony-health-check-bundle/workflows/CI/badge.svg?branch=master
 [develop Build Status]: https://github.com/macpaw/symfony-health-check-bundle/actions?query=workflow%3ACI+branch%3Adevelop
