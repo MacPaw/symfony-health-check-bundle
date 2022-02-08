@@ -113,4 +113,6 @@ class StatusUpCheck implements CheckInterface
 }
 ```
 
-
+Step 4: Remove Custom Error library
+----------------------------------
+Remove custom error in handler https://github.com/MacPaw/symfony-health-check-bundle/tree/v0.8.0/src/Exception 
