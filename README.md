@@ -13,6 +13,7 @@ Step 1: Download the Bundle
 ----------------------------------
 Open a command console, enter your project directory and execute:
 
+
 ###  Applications that use Symfony Flex
 
 ```console
