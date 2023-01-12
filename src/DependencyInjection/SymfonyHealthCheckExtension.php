@@ -14,11 +14,6 @@ use SymfonyHealthCheckBundle\Controller\PingController;
 
 class SymfonyHealthCheckExtension extends Extension
 {
-    /**
-     * @param array<array> $configs
-     *
-     * {@inheritdoc}
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
@@ -30,9 +25,6 @@ class SymfonyHealthCheckExtension extends Extension
         $this->loadHealthChecks($config, $loader, $container);
     }
 
-    /**
-     * @param array<array> $config
-     */
     private function loadHealthChecks(
         array $config,
         XmlFileLoader $loader,
