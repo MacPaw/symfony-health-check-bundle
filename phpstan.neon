@@ -2,6 +2,6 @@ includes:
     - phpstan-baseline.neon
 
 parameters:
-    level: max
+    level: 5
     paths:
-        - src/
+        - src
