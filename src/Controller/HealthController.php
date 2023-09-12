@@ -16,6 +16,12 @@ final class HealthController extends AbstractController
      * @var array<CheckInterface>
      */
     private array $healthChecks = [];
+    private ?int $customResponseCode = null;
+
+    public function setCustomResponseCode(?int $code): void
+    {
+        $this->customResponseCode = $code;
+    }
 
     public function addHealthCheck(CheckInterface $healthCheck): void
     {
@@ -31,11 +37,22 @@ final class HealthController extends AbstractController
      */
     public function healthCheckAction(): JsonResponse
     {
-        $resultHealthCheck = [];
-        foreach ($this->healthChecks as $healthCheck) {
-            $resultHealthCheck[] = $healthCheck->check()->toArray();
+        $resultHealthCheck = array_map(
+            fn($healthCheck) => $healthCheck->check()->toArray(),
+            $this->healthChecks
+        );
+
+        $code = $this->customResponseCode;
+
+        if (null !== $code) {
+            foreach ($resultHealthCheck as $result) {
+                if (!$result['result']) {
+                    $responseCode = $code;
+                    break;
+                }
+            }
         }
 
-        return new JsonResponse($resultHealthCheck, Response::HTTP_OK);
+        return new JsonResponse($resultHealthCheck, $responseCode ?? Response::HTTP_OK);
     }
 }

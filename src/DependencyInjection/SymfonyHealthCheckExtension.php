@@ -37,12 +37,14 @@ class SymfonyHealthCheckExtension extends Extension
         foreach ($config['health_checks'] as $healthCheckConfig) {
             $healthCheckDefinition = new Reference($healthCheckConfig['id']);
             $healthCheckCollection->addMethodCall('addHealthCheck', [$healthCheckDefinition]);
+            $healthCheckCollection->addMethodCall('setCustomResponseCode', [$config['health_error_response_code']]);
         }
 
         $pingCollection = $container->findDefinition(PingController::class);
         foreach ($config['ping_checks'] as $healthCheckConfig) {
             $healthCheckDefinition = new Reference($healthCheckConfig['id']);
             $pingCollection->addMethodCall('addHealthCheck', [$healthCheckDefinition]);
+            $pingCollection->addMethodCall('setCustomResponseCode', [$config['ping_error_response_code']]);
         }
     }
 }

@@ -16,10 +16,16 @@ final class PingController extends AbstractController
      * @var array<CheckInterface>
      */
     private array $checks = [];
+    private ?int $customResponseCode = null;
 
     public function addHealthCheck(CheckInterface $check): void
     {
         $this->checks[] = $check;
+    }
+
+    public function setCustomResponseCode(?int $code): void
+    {
+        $this->customResponseCode = $code;
     }
 
     /**
@@ -31,11 +37,22 @@ final class PingController extends AbstractController
      */
     public function pingAction(): JsonResponse
     {
-        $pingCheck = [];
-        foreach ($this->checks as $healthCheck) {
-            $pingCheck[] = $healthCheck->check()->toArray();
+        $pingCheck = array_map(
+            fn($healthCheck) => $healthCheck->check()->toArray(),
+            $this->checks
+        );
+
+        $code = $this->customResponseCode;
+
+        if (null !== $code) {
+            foreach ($pingCheck as $result) {
+                if (!$result['result']) {
+                    $responseCode = $code;
+                    break;
+                }
+            }
         }
 
-        return new JsonResponse($pingCheck, Response::HTTP_OK);
+        return new JsonResponse($pingCheck, $responseCode ?? Response::HTTP_OK);
     }
 }
