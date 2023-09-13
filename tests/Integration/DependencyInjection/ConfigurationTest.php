@@ -22,6 +22,15 @@ final class ConfigurationTest extends TestCase
         self::assertSame($expectedBundleDefaultConfig, $this->processConfiguration([]));
     }
 
+    public function testConfigurationTreeBuilderRootName(): void
+    {
+        $configuration = new Configuration();
+        $treeBuilder = $configuration->getConfigTreeBuilder();
+        $rootNodeName = $treeBuilder->buildTree()->getName();
+
+        $this->assertSame('symfony_health_check', $rootNodeName);
+    }
+
     public function testProcessConfigurationHealthChecks(): void
     {
         $expectedConfig = [
