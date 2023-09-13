@@ -70,6 +70,9 @@ symfony_health_check:
         - id: symfony_health_check.doctrine_check
     ping_checks:
         - id: symfony_health_check.status_up_check
+#    using this optional parameter you may set custom error code if some check fails. Response code must be a valid HTTP status code. Default response is 200l. 
+    ping_error_response_code: 500
+    health_error_response_code: 404
 ```
 
 Create Symfony Health Check Bundle Routing Config:
