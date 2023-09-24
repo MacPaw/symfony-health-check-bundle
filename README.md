@@ -70,7 +70,16 @@ symfony_health_check:
         - id: symfony_health_check.doctrine_check
     ping_checks:
         - id: symfony_health_check.status_up_check
-#    using this optional parameter you may set custom error code if some check fails. Response code must be a valid HTTP status code. Default response is 200l. 
+```
+Change response code:
+- default response code is 200.
+- determine your custom response code in case of some check fails (Response code must be a valid HTTP status code)
+```yaml
+symfony_health_check:
+    health_checks:
+        - id: symfony_health_check.doctrine_check
+    ping_checks:
+        - id: symfony_health_check.status_up_check
     ping_error_response_code: 500
     health_error_response_code: 404
 ```
@@ -144,12 +153,12 @@ You can change the default behavior with a light configuration, remember to retu
 health:
     path: /your/custom/url
     methods: GET
-    controller: SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction
+    controller: SymfonyHealthCheckBundle\Controller\HealthController::check
     
 ping:
     path: /your/custom/url
     methods: GET
-    controller: SymfonyHealthCheckBundle\Controller\PingController::pingAction
+    controller: SymfonyHealthCheckBundle\Controller\PingController::check
 
 ```
 

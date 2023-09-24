@@ -29,7 +29,7 @@ class HealthControllerTest extends WebTestCase
         $healthController = new HealthController();
         $healthController->addHealthCheck(new StatusUpCheck());
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -45,7 +45,7 @@ class HealthControllerTest extends WebTestCase
         $healthController = new HealthController();
         $healthController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -64,7 +64,7 @@ class HealthControllerTest extends WebTestCase
         $healthController = new HealthController();
         $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
             json_encode([[
@@ -83,7 +83,7 @@ class HealthControllerTest extends WebTestCase
         $healthController->addHealthCheck(new StatusUpCheck());
         $healthController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -108,7 +108,7 @@ class HealthControllerTest extends WebTestCase
     {
         $healthController = new HealthController();
         $healthController->addHealthCheck(new EnvironmentCheck(static::bootKernel()->getContainer()));
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -138,7 +138,7 @@ class HealthControllerTest extends WebTestCase
         $healthController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
         $healthController->setCustomResponseCode(500);
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(500, $response->getStatusCode());
         self::assertSame(
@@ -158,7 +158,7 @@ class HealthControllerTest extends WebTestCase
         $healthController->addHealthCheck(new StatusUpCheck());
         $healthController->setCustomResponseCode(500);
 
-        $response = $healthController->healthCheckAction();
+        $response = $healthController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
