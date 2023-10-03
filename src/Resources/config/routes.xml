@@ -7,13 +7,13 @@
     <route
         id="health"
         path="/health"
-        controller="SymfonyHealthCheckBundle\Controller\HealthController::healthCheckAction"
+        controller="SymfonyHealthCheckBundle\Controller\HealthController::check"
         methods="GET"
     />
     <route
         id="ping"
         path="/ping"
-        controller="SymfonyHealthCheckBundle\Controller\PingController::pingAction"
+        controller="SymfonyHealthCheckBundle\Controller\PingController::check"
         methods="GET"
     />
 </routes>

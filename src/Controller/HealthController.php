@@ -4,24 +4,11 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use SymfonyHealthCheckBundle\Check\CheckInterface;
 
-final class HealthController extends AbstractController
+final class HealthController extends BaseController
 {
-    /**
-     * @var array<CheckInterface>
-     */
-    private array $healthChecks = [];
-
-    public function addHealthCheck(CheckInterface $healthCheck): void
-    {
-        $this->healthChecks[] = $healthCheck;
-    }
-
     /**
      * @Route(
      *     path="/health",
@@ -29,13 +16,8 @@ final class HealthController extends AbstractController
      *     methods={"GET"}
      * )
      */
-    public function healthCheckAction(): JsonResponse
+    public function check(): JsonResponse
     {
-        $resultHealthCheck = [];
-        foreach ($this->healthChecks as $healthCheck) {
-            $resultHealthCheck[] = $healthCheck->check()->toArray();
-        }
-
-        return new JsonResponse($resultHealthCheck, Response::HTTP_OK);
+        return $this->checkAction();
     }
 }
