@@ -25,6 +25,9 @@ class DoctrineCheck implements CheckInterface
             return new Response(self::CHECK_RESULT_NAME, false, 'Entity Manager Not Found.');
         }
 
+        /**
+         * @var object|null $entityManager
+         */
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         if ($entityManager === null) {

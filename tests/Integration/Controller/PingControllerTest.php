@@ -29,7 +29,7 @@ class PingControllerTest extends WebTestCase
         $pingController = new PingController();
         $pingController->addHealthCheck(new StatusUpCheck());
 
-        $response = $pingController->pingAction();
+        $response = $pingController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -45,7 +45,7 @@ class PingControllerTest extends WebTestCase
         $pingController = new PingController();
         $pingController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $pingController->pingAction();
+        $response = $pingController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -64,7 +64,7 @@ class PingControllerTest extends WebTestCase
         $pingController = new PingController();
         $pingController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
 
-        $response = $pingController->pingAction();
+        $response = $pingController->check();
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
             json_encode([[
@@ -83,7 +83,7 @@ class PingControllerTest extends WebTestCase
         $pingController->addHealthCheck(new StatusUpCheck());
         $pingController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
 
-        $response = $pingController->pingAction();
+        $response = $pingController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(
@@ -104,11 +104,56 @@ class PingControllerTest extends WebTestCase
         );
     }
 
+    public function testCustomErrorCodeIfOneOfChecksIsFalse(): void
+    {
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new StatusUpCheck());
+        $pingController->addHealthCheck(new EnvironmentCheck(new ContainerBuilder()));
+        $pingController->setCustomResponseCode(500);
+
+        $response = $pingController->check();
+
+        self::assertSame(500, $response->getStatusCode());
+        self::assertSame(
+            json_encode([
+                [
+                    'name' => 'status',
+                    'result' => true,
+                    'message' => 'up',
+                    'params' => [],
+                ],
+                [
+                    'name' => 'environment',
+                    'result' => false,
+                    'message' => 'Could not determine',
+                    'params' => []
+                ]]),
+            $response->getContent()
+        );
+    }
+
+    public function testCustomErrorCodeDoesNotAffectSuccessResponse(): void
+    {
+        $pingController = new PingController();
+        $pingController->addHealthCheck(new StatusUpCheck());
+        $pingController->setCustomResponseCode(500);
+
+        $response = $pingController->check();
+
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(
+            json_encode([[
+                'name' => 'status', 'result' => true, 'message' => 'up', 'params' => [],
+            ]]),
+            $response->getContent()
+        );
+    }
+
     public function testEnvironmentCheckSuccess(): void
     {
         $pingController = new PingController();
         $pingController->addHealthCheck(new EnvironmentCheck(static::bootKernel()->getContainer()));
-        $response = $pingController->pingAction();
+        $response = $pingController->check();
 
         self::assertSame(200, $response->getStatusCode());
         self::assertSame(

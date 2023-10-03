@@ -7,6 +7,7 @@ namespace SymfonyHealthCheckBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class Configuration implements ConfigurationInterface
 {
@@ -21,6 +22,24 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
+                ->variableNode('ping_error_response_code')
+                    ->defaultValue(null)
+                    ->validate()
+                        ->ifTrue(function ($value) {
+                            return $value !== null && !array_key_exists($value, Response::$statusTexts);
+                        })
+                        ->thenInvalid('The ping_error_response_code must be valid HTTP status code or null.')
+                    ->end()
+                ->end()
+                ->variableNode('health_error_response_code')
+                    ->defaultValue(null)
+                    ->validate()
+                        ->ifTrue(function ($value) {
+                            return $value !== null && !array_key_exists($value, Response::$statusTexts);
+                        })
+                        ->thenInvalid('The health_error_response_code must be valid HTTP status code or null.')
+                    ->end()
+                ->end()
                 ->arrayNode('health_checks')
                     ->prototype('array')
                         ->children()

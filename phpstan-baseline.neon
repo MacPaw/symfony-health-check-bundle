@@ -1,7 +1,7 @@
 parameters:
 	ignoreErrors:
 	    -
-	        message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\).#'
+	        message: '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeParentInterface::variableNode\(\).#'
 	        count: 1
 	        path: ./src/DependencyInjection
 	    -
