@@ -23,9 +23,6 @@ jobs:
                     - '6.2.*'
                 include:
                     - php: '7.4'
-                      symfony-versions: '^3.4'
-                      coverage: 'none'
-                    - php: '7.4'
                       symfony-versions: '^4.4'
                       coverage: 'none'
                     - php: '7.4'
@@ -40,7 +37,7 @@ jobs:
                     - description: 'Log Code Coverage'
                       php: '8.2'
                       coverage: 'xdebug'
-                      symfony-versions: '^6.2'
+                      symfony-versions: '^7.0'
 
         name: PHP ${{ matrix.php }} Symfony ${{ matrix.symfony-versions }} ${{ matrix.description }}
         steps:
