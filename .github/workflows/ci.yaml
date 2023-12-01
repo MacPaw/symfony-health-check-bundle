@@ -81,11 +81,11 @@ jobs:
               run: composer install
 
             - name: Run PHPUnit tests
-              run: vendor/bin/simple-phpunit
+              run: vendor/bin/phpunit
               if: matrix.coverage == 'none'
 
             - name: PHPUnit tests and Log Code coverage
-              run: vendor/bin/simple-phpunit --coverage-clover=coverage.xml
+              run: vendor/bin/phpunit --coverage-clover=coverage.xml
               if: matrix.coverage == 'xdebug'
 
             - name: Run codecov
