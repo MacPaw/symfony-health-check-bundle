@@ -13,58 +13,32 @@ Step 1: Download the Bundle
 ----------------------------------
 Open a command console, enter your project directory and execute:
 
-###  Applications that use Symfony Flex
-
 ```console
-$ composer require macpaw/symfony-health-check-bundle
+composer require macpaw/symfony-health-check-bundle
 ```
 
 ### Applications that don't use Symfony Flex
 
-Open a command console, enter your project directory and execute the
-following command to download the latest stable version of this bundle:
-
-```console
-$ composer require macpaw/symfony-health-check-bundle
-```
-
-This command requires you to have Composer installed globally, as explained
-in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
-of the Composer documentation.
-
-Step 2: Enable the Bundle
-----------------------------------
-Then, enable the bundle by adding it to the list of registered bundles
-in the `app/AppKernel.php` file of your project:
+enable the bundle by adding it to the list of registered bundles in config/bundles.php
 
 ```php
+// config/bundles.php
 <?php
-// app/AppKernel.php
 
-// ...
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
+return [
             SymfonyHealthCheckBundle\SymfonyHealthCheckBundle::class => ['all' => true],
-        );
 
         // ...
-    }
-
-    // ...
-}
+    ];
 ```
 
 Create Symfony Health Check Bundle Config:
 ----------------------------------
-`config/packages/symfony_health_check.yaml`
 
 Configurating health check - all available you can see [here](https://github.com/MacPaw/symfony-health-check-bundle/tree/master/src/Check).
 
 ```yaml
+# config/packages/symfony_health_check.yaml`
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_check
@@ -98,11 +72,11 @@ Step 3: Configuration
 
 Security Optional:
 ----------------------------------
-`config/packages/security.yaml`
 
 If you are using [symfony/security](https://symfony.com/doc/current/security.html) and your health check is to be used anonymously, add a new firewall to the configuration
 
 ```yaml
+# config/packages/security.yaml
     firewalls:
         healthcheck:
             pattern: ^/health
