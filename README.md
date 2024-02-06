@@ -122,8 +122,9 @@ symfony_health_check:
 
 How Change Route:
 ----------------------------------
-You can change the default behavior with a light configuration, remember to return to Step 3 after that:
+You can change the default behavior with a light configuration, remember to modify the routes.
 ```yaml
+# config/routes/symfony_health_check.yaml
 health:
     path: /your/custom/url
     methods: GET
