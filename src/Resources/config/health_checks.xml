@@ -12,5 +12,8 @@
             <argument type="service" id="service_container"/>
         </service>
         <service id="symfony_health_check.status_up_check" class="SymfonyHealthCheckBundle\Check\StatusUpCheck"/>
+        <service id="symfony_health_check.predis_check" class="SymfonyHealthCheckBundle\Check\PredisCheck">
+            <argument type="service" id="service_container"/>
+        </service>
     </services>
 </container>

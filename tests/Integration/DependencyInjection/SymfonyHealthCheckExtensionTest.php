@@ -50,12 +50,18 @@ class SymfonyHealthCheckExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFixture('filled_bundle_config');
 
-        self::assertCount(6, $container->getDefinitions());
-        self::assertArrayHasKey(HealthController::class, $container->getDefinitions());
-        self::assertArrayHasKey(PingController::class, $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check.doctrine_check', $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check.environment_check', $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check.status_up_check', $container->getDefinitions());
+        self::assertSame(
+            [
+                'service_container',
+                HealthController::class,
+                PingController::class,
+                'symfony_health_check.doctrine_check',
+                'symfony_health_check.environment_check',
+                'symfony_health_check.status_up_check',
+                'symfony_health_check.predis_check',
+            ],
+            array_keys($container->getDefinitions()),
+        );
     }
 
     private function createContainerFromFixture(string $fixtureFile): ContainerBuilder

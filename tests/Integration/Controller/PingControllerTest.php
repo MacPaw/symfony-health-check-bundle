@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use SymfonyHealthCheckBundle\Check\DoctrineCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
+use SymfonyHealthCheckBundle\Check\PredisCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
 use SymfonyHealthCheckBundle\Controller\PingController;
 use TypeError;
@@ -74,6 +75,24 @@ class PingControllerTest extends WebTestCase
                 'params' => []
             ]]),
             $response->getContent()
+        );
+    }
+
+    public function testPredisCheckServiceNotFoundException(): void
+    {
+        $healthController = new PingController();
+        $healthController->addHealthCheck(new PredisCheck(new ContainerBuilder()));
+
+        $response = $healthController->check();
+        self::assertSame(200, $response->getStatusCode());
+        self::assertSame(
+            json_encode([[
+                'name' => 'predis',
+                'result' => false,
+                'message' => 'Predis Client not found',
+                'params' => [],
+            ]]),
+            $response->getContent(),
         );
     }
 
