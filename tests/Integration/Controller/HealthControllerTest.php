@@ -6,7 +6,7 @@ namespace SymfonyHealthCheckBundle\Tests\Integration\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use SymfonyHealthCheckBundle\Check\DoctrineCheck;
+use SymfonyHealthCheckBundle\Check\DoctrineORMCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
 use SymfonyHealthCheckBundle\Controller\HealthController;
@@ -62,7 +62,7 @@ class HealthControllerTest extends WebTestCase
     public function testDoctrineCheckServiceNotFoundException(): void
     {
         $healthController = new HealthController();
-        $healthController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
+        $healthController->addHealthCheck(new DoctrineORMCheck(new ContainerBuilder()));
 
         $response = $healthController->check();
         self::assertSame(200, $response->getStatusCode());
