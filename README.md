@@ -41,7 +41,7 @@ Configurating health check - all available you can see [here](https://github.com
 # config/packages/symfony_health_check.yaml`
 symfony_health_check:
     health_checks:
-        - id: symfony_health_check.doctrine_check
+        - id: symfony_health_check.doctrine_orm_check
     ping_checks:
         - id: symfony_health_check.status_up_check
 ```
@@ -51,7 +51,7 @@ Change response code:
 ```yaml
 symfony_health_check:
     health_checks:
-        - id: symfony_health_check.doctrine_check
+        - id: symfony_health_check.doctrine_orm_check
     ping_checks:
         - id: symfony_health_check.status_up_check
     ping_error_response_code: 500
@@ -116,7 +116,7 @@ Then we add our custom health check to collection
 ```yaml
 symfony_health_check:
     health_checks:
-        - id: symfony_health_check.doctrine_check
+        - id: symfony_health_check.doctrine_orm_check
         - id: custom_health_check // custom service check id
 ```
 

@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Dto\Response;
 use Throwable;
 
-class DoctrineCheck implements CheckInterface
+class DoctrineORMCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'doctrine';
 
