@@ -7,13 +7,13 @@ namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use SymfonyHealthCheckBundle\Check\DoctrineCheck;
+use SymfonyHealthCheckBundle\Check\DoctrineORMCheck;
 use SymfonyHealthCheckBundle\Tests\Mock\ConnectionMock;
 use SymfonyHealthCheckBundle\Tests\Mock\EntityManagerMock;
 
-class DoctrineCheckTest extends TestCase
+class DoctrineORMCheckTest extends TestCase
 {
-    public function testDoctrineHasNotFoundException(): void
+    public function testDoctrineORMHasNotFoundException(): void
     {
         $container = $this->createMock(ContainerInterface::class);
 
@@ -22,7 +22,7 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn(false);
 
-        $doctrine = new DoctrineCheck($container);
+        $doctrine = new DoctrineORMCheck($container);
 
         $result = $doctrine->check()->toArray();
 
@@ -40,7 +40,7 @@ class DoctrineCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testDoctrineGetNotFoundException(): void
+    public function testDoctrineORMGetNotFoundException(): void
     {
         $container = $this->createMock(ContainerInterface::class);
 
@@ -54,7 +54,7 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn(null);
 
-        $doctrine = new DoctrineCheck($container);
+        $doctrine = new DoctrineORMCheck($container);
 
         $result = $doctrine->check()->toArray();
 
@@ -72,7 +72,7 @@ class DoctrineCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testDoctrineSuccess(): void
+    public function testDoctrineORMSuccess(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $entityManager = $this->createMock(EntityManagerMock::class);
@@ -87,7 +87,7 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn($entityManager);
 
-        $doctrine = new DoctrineCheck($container);
+        $doctrine = new DoctrineORMCheck($container);
 
         $result = $doctrine->check()->toArray();
 
@@ -105,7 +105,7 @@ class DoctrineCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testDoctrineFailPing(): void
+    public function testDoctrineORMFailPing(): void
     {
         $container = $this->createMock(ContainerInterface::class);
         $entityManager = $this->createMock(EntityManagerMock::class);
@@ -131,7 +131,7 @@ class DoctrineCheckTest extends TestCase
             ->with('doctrine.orm.entity_manager')
             ->willReturn($entityManager);
 
-        $doctrine = new DoctrineCheck($container);
+        $doctrine = new DoctrineORMCheck($container);
 
         $result = $doctrine->check()->toArray();
 

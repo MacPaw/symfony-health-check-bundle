@@ -50,10 +50,12 @@ class SymfonyHealthCheckExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFixture('filled_bundle_config');
 
-        self::assertCount(6, $container->getDefinitions());
+        self::assertCount(8, $container->getDefinitions());
         self::assertArrayHasKey(HealthController::class, $container->getDefinitions());
         self::assertArrayHasKey(PingController::class, $container->getDefinitions());
-        self::assertArrayHasKey('symfony_health_check.doctrine_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check.doctrine_check', $container->getDefinitions()); #deprecated
+        self::assertArrayHasKey('symfony_health_check.doctrine_orm_check', $container->getDefinitions());
+        self::assertArrayHasKey('symfony_health_check.doctrine_odm_check', $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check.environment_check', $container->getDefinitions());
         self::assertArrayHasKey('symfony_health_check.status_up_check', $container->getDefinitions());
     }

@@ -6,7 +6,7 @@ namespace SymfonyHealthCheckBundle\Tests\Integration\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use SymfonyHealthCheckBundle\Check\DoctrineCheck;
+use SymfonyHealthCheckBundle\Check\DoctrineORMCheck;
 use SymfonyHealthCheckBundle\Check\EnvironmentCheck;
 use SymfonyHealthCheckBundle\Check\StatusUpCheck;
 use SymfonyHealthCheckBundle\Controller\PingController;
@@ -62,7 +62,7 @@ class PingControllerTest extends WebTestCase
     public function testDoctrineCheckServiceNotFoundException(): void
     {
         $pingController = new PingController();
-        $pingController->addHealthCheck(new DoctrineCheck(new ContainerBuilder()));
+        $pingController->addHealthCheck(new DoctrineORMCheck(new ContainerBuilder()));
 
         $response = $pingController->check();
         self::assertSame(200, $response->getStatusCode());
