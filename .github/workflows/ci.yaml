@@ -73,9 +73,9 @@ jobs:
               if: matrix.coverage == 'xdebug'
 
             - name: Run codecov
-              uses: codecov/codecov-action@v4.0.1
+              uses: codecov/codecov-action@v5
               if: matrix.coverage == 'xdebug'
               with:
                   token: ${{ secrets.CODECOV_TOKEN }}
-                  file: './coverage.xml'
+                  files: './coverage.xml'
                   fail_ci_if_error: true
