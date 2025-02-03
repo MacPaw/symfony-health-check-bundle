@@ -23,6 +23,9 @@ class SymfonyHealthCheckExtension extends Extension
         $loader->load('controller.xml');
 
         $this->loadHealthChecks($config, $loader, $container);
+
+        $container->getDefinition('symfony_health_check.redis_check')
+            ->setArgument(0, $config['redis_dsn']);
     }
 
     private function loadHealthChecks(
