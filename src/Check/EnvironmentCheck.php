@@ -21,7 +21,6 @@ class EnvironmentCheck implements CheckInterface
 
     public function check(): Response
     {
-
         try {
             $env = $this->container->getParameter('kernel.environment');
         } catch (Throwable $e) {
