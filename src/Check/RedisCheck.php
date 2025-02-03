@@ -38,7 +38,15 @@ class RedisCheck implements CheckInterface
         }
 
         try {
-            RedisAdapter::createConnection($this->redisDsn)->ping();
+            $redisConnection = RedisAdapter::createConnection($this->redisDsn);
+
+            if (method_exists($redisConnection, 'ping')) {
+                $result = $redisConnection->ping('hello redis');
+
+                if ($result !== 'hello redis') {
+                    return new Response(self::CHECK_RESULT_NAME, false, 'Redis ping failed.');
+                }
+            }
 
             return new Response(self::CHECK_RESULT_NAME, true, 'ok');
         } catch (\Throwable $e) {
