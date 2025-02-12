@@ -6,16 +6,22 @@ namespace SymfonyHealthCheckBundle\Check;
 
 use Composer\InstalledVersions;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Dto\Response;
+use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 
 class RedisCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'redis_check';
 
+    private RedisAdapterWrapper $redisAdapter;
     private ?string $redisDsn;
 
-    public function __construct(?string $redisDsn)
-    {
+    public function __construct(
+        RedisAdapterWrapper $redisAdapter,
+        ?string $redisDsn,
+    ) {
+        $this->redisAdapter = $redisAdapter;
         $this->redisDsn = $redisDsn;
     }
 
@@ -38,12 +44,11 @@ class RedisCheck implements CheckInterface
         }
 
         try {
-            $redisConnection = RedisAdapter::createConnection($this->redisDsn);
+            $redisConnection = $this->redisAdapter->createConnection($this->redisDsn);
 
             switch (true) {
                 case method_exists($redisConnection, 'ping'):
                     $result = $redisConnection->ping('hello redis');
-
                     if ($result !== 'hello redis') {
                         return new Response(self::CHECK_RESULT_NAME, false, 'Redis ping failed.');
                     }
@@ -51,7 +56,6 @@ class RedisCheck implements CheckInterface
                     break;
                 case method_exists($redisConnection, 'info'):
                     $result = $redisConnection->info();
-
                     if (!is_array($result)) {
                         return new Response(self::CHECK_RESULT_NAME, false, 'Redis info failed.');
                     }
