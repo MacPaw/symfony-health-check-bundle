@@ -46,6 +46,14 @@ class SymfonyHealthCheckExtensionTest extends TestCase
         }
     }
 
+    public function testWithEmptyRedisDsnConfig(): void
+    {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('To use RedisCheck you need to configure redis_dsn parameter.');
+
+        $this->createContainerFromFixture('error_redis_check_bundle_config');
+    }
+
     public function testWithFullConfig(): void
     {
         $container = $this->createContainerFromFixture('filled_bundle_config');

@@ -11,28 +11,6 @@ use SymfonyHealthCheckBundle\Check\RedisCheck;
 
 class RedisCheckTest extends TestCase
 {
-    public function testRedisDsnWasNotProvided(): void
-    {
-        $adapter = $this->createMock(RedisAdapterWrapper::class);
-
-        $check = new RedisCheck($adapter, null);
-
-        $result = $check->check()->toArray();
-
-        self::assertIsArray($result);
-        self::assertNotEmpty($result);
-
-        self::assertArrayHasKey('name', $result);
-        self::assertArrayHasKey('result', $result);
-        self::assertArrayHasKey('message', $result);
-        self::assertArrayHasKey('params', $result);
-
-        self::assertSame('redis_check', $result['name']);
-        self::assertFalse($result['result']);
-        self::assertSame('redis_dsn parameter should be configured to perform this check.', $result['message']);
-        self::assertIsArray($result['params']);
-    }
-
     public function testRedisClusterIsNotSupported(): void
     {
         /** @var RedisCluster $connectionMock */
