@@ -15,6 +15,7 @@ final class ConfigurationTest extends TestCase
         $expectedBundleDefaultConfig = [
             'ping_error_response_code' => null,
             'health_error_response_code' => null,
+            'redis_dsn' => null,
             'health_checks' => [],
             'ping_checks' => [],
         ];
@@ -40,6 +41,7 @@ final class ConfigurationTest extends TestCase
             'ping_checks' => [],
             'ping_error_response_code' => null,
             'health_error_response_code' => null,
+            'redis_dsn' => null,
         ];
         $new = ['health_checks' => [
             ['id' => 'symfony_health_check.doctrine_check']
@@ -60,6 +62,7 @@ final class ConfigurationTest extends TestCase
             ],
             'ping_error_response_code' => null,
             'health_error_response_code' => null,
+            'redis_dsn' => null,
         ];
         $new = ['health_checks' => [], 'ping_checks' => [
             ['id' => 'symfony_health_check.doctrine_check']
@@ -82,6 +85,7 @@ final class ConfigurationTest extends TestCase
             ],
             'ping_error_response_code' => null,
             'health_error_response_code' => null,
+            'redis_dsn' => null,
         ];
         $new = [
             'health_checks' => [['id' => 'symfony_health_check.doctrine_check']],
@@ -105,12 +109,40 @@ final class ConfigurationTest extends TestCase
             ],
             'ping_error_response_code' => 404,
             'health_error_response_code' => 500,
+            'redis_dsn' => null,
         ];
         $new = [
             'health_checks' => [['id' => 'symfony_health_check.doctrine_check']],
             'ping_checks' => [['id' => 'symfony_health_check.doctrine_check']],
             'ping_error_response_code' => 404,
             'health_error_response_code' => 500,
+        ];
+
+        self::assertSame(
+            $expectedConfig,
+            $this->processConfiguration($new)
+        );
+    }
+
+    public function testItProcessConfigurationWithRedisDsn(): void
+    {
+        $expectedConfig = [
+            'health_checks' => [
+                ['id' => 'symfony_health_check.doctrine_check']
+            ],
+            'ping_checks' => [
+                ['id' => 'symfony_health_check.doctrine_check']
+            ],
+            'ping_error_response_code' => 404,
+            'health_error_response_code' => 500,
+            'redis_dsn' => 'redis://redis',
+        ];
+        $new = [
+            'health_checks' => [['id' => 'symfony_health_check.doctrine_check']],
+            'ping_checks' => [['id' => 'symfony_health_check.doctrine_check']],
+            'ping_error_response_code' => 404,
+            'health_error_response_code' => 500,
+            'redis_dsn' => 'redis://redis',
         ];
 
         self::assertSame(

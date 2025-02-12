@@ -40,6 +40,15 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The health_error_response_code must be valid HTTP status code or null.')
                     ->end()
                 ->end()
+                ->variableNode('redis_dsn')
+                    ->defaultValue(null)
+                    ->validate()
+                        ->ifTrue(function ($value) {
+                            return $value !== null && !is_string($value);
+                        })
+                        ->thenInvalid('The redis_dsn must be a string or null.')
+                    ->end()
+                ->end()
                 ->arrayNode('health_checks')
                     ->prototype('array')
                         ->children()

@@ -5,6 +5,8 @@
     http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
         <defaults autowire="true" autoconfigure="true" public="true" />
+        <service id="symfony_health_check.redis_adapter_wrapper" class="SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper" public="false"/>
+
         <service id="symfony_health_check.doctrine_check" class="SymfonyHealthCheckBundle\Check\DoctrineORMCheck">
             <argument type="service" id="service_container"/>
             <deprecated package="macpaw/symfony-health-check-bundle" version="1.4.2">The "%service_id%" service alias is deprecated, use symfony_health_check.doctrine_orm_check instead</deprecated>
@@ -14,6 +16,9 @@
         </service>
         <service id="symfony_health_check.doctrine_odm_check" class="SymfonyHealthCheckBundle\Check\DoctrineODMCheck">
             <argument type="service" id="service_container"/>
+        </service>
+        <service id="symfony_health_check.redis_check" class="SymfonyHealthCheckBundle\Check\RedisCheck">
+            <argument type="service" id="symfony_health_check.redis_adapter_wrapper"/>
         </service>
         <service id="symfony_health_check.environment_check" class="SymfonyHealthCheckBundle\Check\EnvironmentCheck">
             <argument type="service" id="service_container"/>
