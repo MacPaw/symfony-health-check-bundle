@@ -56,7 +56,7 @@ class RedisCheckTest extends TestCase
         self::assertSame('redis_check', $result['name']);
         self::assertFalse($result['result']);
         self::assertSame(
-            'Unsupported Redis client type: ' . $connectionMock::class,
+            sprintf('Unsupported Redis client type: %s', get_class($connectionMock)),
             $result['message'],
         );
         self::assertIsArray($result['params']);

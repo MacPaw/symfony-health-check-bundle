@@ -44,7 +44,6 @@ class RedisCheck implements CheckInterface
         try {
             $redisConnection = $this->redisAdapter->createConnection($this->redisDsn);
 
-            $result = false;
             switch (true) {
                 case $redisConnection instanceof \Redis:
                     $result = $this->checkForDefaultRedisClient($redisConnection);
@@ -59,7 +58,10 @@ class RedisCheck implements CheckInterface
 
                     break;
                 default:
-                    throw new \RuntimeException('Unsupported Redis client type: ' . $redisConnection::class);
+                    throw new \RuntimeException(sprintf(
+                        'Unsupported Redis client type: %s',
+                        get_class($redisConnection),
+                    ));
             }
 
             if (!$result) {
