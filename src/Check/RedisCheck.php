@@ -15,10 +15,8 @@ class RedisCheck implements CheckInterface
     private RedisAdapterWrapper $redisAdapter;
     private ?string $redisDsn;
 
-    public function __construct(
-        RedisAdapterWrapper $redisAdapter,
-        ?string $redisDsn,
-    ) {
+    public function __construct(RedisAdapterWrapper $redisAdapter, ?string $redisDsn)
+    {
         $this->redisAdapter = $redisAdapter;
         $this->redisDsn = $redisDsn;
     }

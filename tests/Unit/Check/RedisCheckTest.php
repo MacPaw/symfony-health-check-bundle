@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 
 use PHPUnit\Framework\TestCase;
+use Predis\Connection\Cluster\RedisCluster;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 use SymfonyHealthCheckBundle\Check\RedisCheck;
 
@@ -34,6 +35,7 @@ class RedisCheckTest extends TestCase
 
     public function testRedisClusterIsNotSupported(): void
     {
+        /** @var RedisCluster $connectionMock */
         $connectionMock = $this->createMock(\RedisCluster::class);
 
         $adapter = $this->createMock(RedisAdapterWrapper::class);
@@ -66,6 +68,7 @@ class RedisCheckTest extends TestCase
     {
         $adapter = $this->createMock(RedisAdapterWrapper::class);
 
+        /** @var \Redis $connectionMock */
         $connectionMock = $this->createMock(\Redis::class);
         $connectionMock
             ->method('ping')
@@ -97,6 +100,7 @@ class RedisCheckTest extends TestCase
     {
         $adapter = $this->createMock(RedisAdapterWrapper::class);
 
+        /** @var \Redis $connectionMock */
         $connectionMock = $this->createMock(\Redis::class);
         $connectionMock
             ->method('ping')
@@ -126,6 +130,7 @@ class RedisCheckTest extends TestCase
 
     public function testItSuccessCheck(): void
     {
+        /** @var \Redis $connectionMock */
         $connectionMock = $this->createMock(\Redis::class);
         $connectionMock
             ->method('ping')
@@ -156,6 +161,7 @@ class RedisCheckTest extends TestCase
 
     public function testItSuccessCheckWithRedisArrayClient(): void
     {
+        /** @var \RedisArray $connectionMock */
         $connectionMock = $this->createMock(\RedisArray::class);
         $connectionMock
             ->method('ping')
@@ -186,6 +192,7 @@ class RedisCheckTest extends TestCase
 
     public function testItSuccessCheckWithPredisClient(): void
     {
+        /** @var \Predis\Client $connectionMock */
         $connectionMock = $this->getMockBuilder(\Predis\Client::class)
             ->disableOriginalConstructor()
             ->getMock();
