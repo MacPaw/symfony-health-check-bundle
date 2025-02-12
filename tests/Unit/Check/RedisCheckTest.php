@@ -56,7 +56,7 @@ class RedisCheckTest extends TestCase
         self::assertSame('redis_check', $result['name']);
         self::assertFalse($result['result']);
         self::assertSame(
-            'Redis cluster ping is not supported. Please use RedisArray or Redis client.',
+            'Unsupported Redis client type: ' . $connectionMock::class,
             $result['message'],
         );
         self::assertIsArray($result['params']);

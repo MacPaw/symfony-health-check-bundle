@@ -5,10 +5,6 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Check;
 
 use Composer\InstalledVersions;
-use Predis\Connection\Cluster\RedisCluster;
-use Relay\Relay;
-use Symfony\Component\Cache\Adapter\RedisAdapter;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Dto\Response;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 
@@ -51,17 +47,19 @@ class RedisCheck implements CheckInterface
             $result = false;
             switch (true) {
                 case $redisConnection instanceof \Redis:
+                    $result = $this->checkForDefaultRedisClient($redisConnection);
+
+                    break;
                 case $redisConnection instanceof \Predis\ClientInterface:
-                case $redisConnection instanceof Relay:
-                    $result = $this->checkForDefaultRedisClientConfiguration($redisConnection);
+                    $result = $this->checkForPredisClient($redisConnection);
 
                     break;
                 case $redisConnection instanceof \RedisArray:
                     $result = $this->checkForRedisArrayClient($redisConnection);
 
                     break;
-                case $redisConnection instanceof \RedisCluster:
-                    $result = $this->checkForRedisClusterClient($redisConnection);
+                default:
+                    throw new \RuntimeException('Unsupported Redis client type: ' . $redisConnection::class);
             }
 
             if (!$result) {
@@ -74,7 +72,18 @@ class RedisCheck implements CheckInterface
         }
     }
 
-    private function checkForDefaultRedisClientConfiguration(\Redis|\Predis\ClientInterface $client): bool
+    private function checkForDefaultRedisClient(\Redis $client): bool
+    {
+        $response = $client->ping();
+
+        if (is_bool($response)) {
+            return $response;
+        }
+
+        return $this->isValidPingResponse($response);
+    }
+
+    private function checkForPredisClient(\Predis\ClientInterface $client): bool
     {
         $response = $client->ping();
 
@@ -106,11 +115,6 @@ class RedisCheck implements CheckInterface
         }
 
         return true;
-    }
-
-    private function checkForRedisClusterClient(\RedisCluster $client): bool
-    {
-        throw new \RuntimeException('Redis cluster ping is not supported. Please use RedisArray or Redis client.');
     }
 
     private function isValidPingResponse(string $response): bool
