@@ -32,6 +32,36 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
+    public function testRedisClusterIsNotSupported(): void
+    {
+        $connectionMock = $this->createMock(\RedisCluster::class);
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame(
+            'Redis cluster ping is not supported. Please use RedisArray or Redis client.',
+            $result['message'],
+        );
+        self::assertIsArray($result['params']);
+    }
+
     public function testItFailsCheckWithExceptionInPing(): void
     {
         $adapter = $this->createMock(RedisAdapterWrapper::class);
@@ -94,18 +124,12 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    /**
-     * @param class-string $redisClientClass
-     *
-     * @dataProvider provideSupportedRedisClients
-     */
-    public function testItSuccessCheck(string $redisClientClass): void
+    public function testItSuccessCheck(): void
     {
         $connectionMock = $this->createMock(\Redis::class);
         $connectionMock
             ->method('ping')
-            ->with('hello redis')
-            ->willReturn('hello redis');
+            ->willReturn('PONG');
 
         $adapter = $this->createMock(RedisAdapterWrapper::class);
         $adapter
@@ -130,14 +154,67 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public static function provideSupportedRedisClients(): array
+    public function testItSuccessCheckWithRedisArrayClient(): void
     {
-        return [
-            [\Redis::class],
-            [\RedisArray::class],
-            [\RedisCluster::class],
-            [\Predis\ClientInterface::class],
-            [\Relay::class],
-        ];
+        $connectionMock = $this->createMock(\RedisArray::class);
+        $connectionMock
+            ->method('ping')
+            ->willReturn(['PONG']);
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertTrue($result['result']);
+        self::assertSame('ok', $result['message']);
+        self::assertIsArray($result['params']);
+    }
+
+    public function testItSuccessCheckWithPredisClient(): void
+    {
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn('PONG');
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertTrue($result['result']);
+        self::assertSame('ok', $result['message']);
+        self::assertIsArray($result['params']);
     }
 }

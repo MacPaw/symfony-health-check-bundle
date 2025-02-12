@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Check;
 
 use Composer\InstalledVersions;
+use Predis\Connection\Cluster\RedisCluster;
+use Relay\Relay;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Dto\Response;
@@ -46,8 +48,23 @@ class RedisCheck implements CheckInterface
         try {
             $redisConnection = $this->redisAdapter->createConnection($this->redisDsn);
 
-            $result = $redisConnection->ping('hello redis');
-            if ($result !== 'hello redis') {
+            $result = false;
+            switch (true) {
+                case $redisConnection instanceof \Redis:
+                case $redisConnection instanceof \Predis\ClientInterface:
+                case $redisConnection instanceof Relay:
+                    $result = $this->checkForDefaultRedisClientConfiguration($redisConnection);
+
+                    break;
+                case $redisConnection instanceof \RedisArray:
+                    $result = $this->checkForRedisArrayClient($redisConnection);
+
+                    break;
+                case $redisConnection instanceof \RedisCluster:
+                    $result = $this->checkForRedisClusterClient($redisConnection);
+            }
+
+            if (!$result) {
                 return new Response(self::CHECK_RESULT_NAME, false, 'Redis ping failed.');
             }
 
@@ -55,5 +72,49 @@ class RedisCheck implements CheckInterface
         } catch (\Throwable $e) {
             return new Response(self::CHECK_RESULT_NAME, false, $e->getMessage());
         }
+    }
+
+    private function checkForDefaultRedisClientConfiguration(\Redis|\Predis\ClientInterface $client): bool
+    {
+        $response = $client->ping();
+
+        if (is_bool($response)) {
+            return $response;
+        }
+
+        return $this->isValidPingResponse($response);
+    }
+
+    private function checkForRedisArrayClient(\RedisArray $client): bool
+    {
+        $response = $client->ping();
+
+        if (is_bool($response)) {
+            return $response;
+        }
+
+        // invalid configuration, RedisClient have different response, than one, provided by RedisArray in fact.
+        // @phpstan-ignore-next-line
+        foreach ($response as $pingResult) {
+            if (is_bool($pingResult) && $pingResult) {
+                continue;
+            }
+
+            if (!$this->isValidPingResponse($pingResult)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private function checkForRedisClusterClient(\RedisCluster $client): bool
+    {
+        throw new \RuntimeException('Redis cluster ping is not supported. Please use RedisArray or Redis client.');
+    }
+
+    private function isValidPingResponse(string $response): bool
+    {
+        return in_array(strtolower($response), ['pong', '+pong'], true);
     }
 }
