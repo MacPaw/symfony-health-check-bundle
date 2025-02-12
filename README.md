@@ -45,6 +45,16 @@ symfony_health_check:
     ping_checks:
         - id: symfony_health_check.status_up_check
 ```
+To perform redis check you need use provide its dsn in the config:
+```yaml
+symfony_health_check:
+    health_checks:
+        ...
+        - id: symfony_health_check.redis_check
+
+    redis_dsn: 'redis://localhost:6379'
+```
+
 Change response code:
 - default response code is 200.
 - determine your custom response code in case of some check fails (Response code must be a valid HTTP status code)
