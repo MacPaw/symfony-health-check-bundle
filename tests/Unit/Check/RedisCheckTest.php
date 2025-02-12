@@ -128,13 +128,18 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testItSuccessCheck(): void
+    /**
+     * @param string|bool $response
+     *
+     * @dataProvider provideAvailablePingResponses
+     */
+    public function testItSuccessCheck($response): void
     {
         /** @var \Redis $connectionMock */
         $connectionMock = $this->createMock(\Redis::class);
         $connectionMock
             ->method('ping')
-            ->willReturn('PONG');
+            ->willReturn($response);
 
         $adapter = $this->createMock(RedisAdapterWrapper::class);
         $adapter
@@ -190,7 +195,12 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testItSuccessCheckWithPredisClient(): void
+    /**
+     * @param string|bool $response
+     *
+     * @dataProvider provideAvailablePingResponses
+     */
+    public function testItSuccessCheckWithPredisClient($response): void
     {
         /** @var \Predis\Client $connectionMock */
         $connectionMock = $this->getMockBuilder(\Predis\Client::class)
@@ -200,7 +210,7 @@ class RedisCheckTest extends TestCase
         $connectionMock->expects($this->once())
             ->method('__call')
             ->with('ping')
-            ->willReturn('PONG');
+            ->willReturn($response);
 
         $adapter = $this->createMock(RedisAdapterWrapper::class);
         $adapter
@@ -223,5 +233,13 @@ class RedisCheckTest extends TestCase
         self::assertTrue($result['result']);
         self::assertSame('ok', $result['message']);
         self::assertIsArray($result['params']);
+    }
+
+    public static function provideAvailablePingResponses(): array
+    {
+        return [
+            ['pong'],
+            [true],
+        ];
     }
 }
