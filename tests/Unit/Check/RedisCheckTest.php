@@ -131,7 +131,7 @@ class RedisCheckTest extends TestCase
     /**
      * @param string|bool $response
      *
-     * @dataProvider provideAvailablePingResponses
+     * @dataProvider provideAvailablePingResponsesOnDefaultClients
      */
     public function testItSuccessCheck($response): void
     {
@@ -164,13 +164,18 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public function testItSuccessCheckWithRedisArrayClient(): void
+    /**
+     * @param string[]|bool $response
+     *
+     * @dataProvider provideAvailablePingResponsesOnRedisArrayClient
+     */
+    public function testItSuccessCheckWithRedisArrayClient($response): void
     {
         /** @var \RedisArray $connectionMock */
         $connectionMock = $this->createMock(\RedisArray::class);
         $connectionMock
             ->method('ping')
-            ->willReturn(['PONG']);
+            ->willReturn($response);
 
         $adapter = $this->createMock(RedisAdapterWrapper::class);
         $adapter
@@ -195,10 +200,41 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
+    public function testItFailsCheckWithRedisArrayClient(): void
+    {
+        /** @var \RedisArray $connectionMock */
+        $connectionMock = $this->createMock(\RedisArray::class);
+        $connectionMock
+            ->method('ping')
+            ->willReturn(['something went wrong']);
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Redis ping failed.', $result['message']);
+        self::assertIsArray($result['params']);
+    }
+
     /**
      * @param string|bool $response
      *
-     * @dataProvider provideAvailablePingResponses
+     * @dataProvider provideAvailablePingResponsesOnDefaultClients
      */
     public function testItSuccessCheckWithPredisClient($response): void
     {
@@ -235,10 +271,19 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
-    public static function provideAvailablePingResponses(): array
+    public static function provideAvailablePingResponsesOnDefaultClients(): array
     {
         return [
             ['pong'],
+            [true],
+        ];
+    }
+
+    public static function provideAvailablePingResponsesOnRedisArrayClient(): array
+    {
+        return [
+            [['PONG']],
+            [[true]],
             [true],
         ];
     }
