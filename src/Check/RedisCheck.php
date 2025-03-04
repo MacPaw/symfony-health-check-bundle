@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Check;
 
-use SymfonyHealthCheckBundle\Dto\Response;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
+use SymfonyHealthCheckBundle\Dto\Response;
 
 class RedisCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'redis_check';
 
     private RedisAdapterWrapper $redisAdapter;
-    private string $redisDsn;
+    private ?string $redisDsn;
 
-    public function __construct(RedisAdapterWrapper $redisAdapter, string $redisDsn)
+    public function __construct(RedisAdapterWrapper $redisAdapter, ?string $redisDsn)
     {
         $this->redisAdapter = $redisAdapter;
         $this->redisDsn = $redisDsn;
@@ -22,6 +22,10 @@ class RedisCheck implements CheckInterface
 
     public function check(): Response
     {
+        if (empty($this->redisDsn)) {
+            return new Response(self::CHECK_RESULT_NAME, false, 'Invalid redis dsn definition.');
+        }
+
         try {
             $redisConnection = $this->redisAdapter->createConnection($this->redisDsn);
 
