@@ -209,6 +209,35 @@ class RedisCheckTest extends TestCase
         self::assertIsArray($result['params']);
     }
 
+    public function testItFailsCheckWhenNoRedisDsnProvided(): void
+    {
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+
+        /** @var \Redis $connectionMock */
+        $connectionMock = $this->createMock(\Redis::class);
+
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, null);
+
+        $result = $check->check()->toArray();
+
+        self::assertIsArray($result);
+        self::assertNotEmpty($result);
+
+        self::assertArrayHasKey('name', $result);
+        self::assertArrayHasKey('result', $result);
+        self::assertArrayHasKey('message', $result);
+        self::assertArrayHasKey('params', $result);
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Invalid redis dsn definition.', $result['message']);
+        self::assertIsArray($result['params']);
+    }
+
     /**
      * @param string|bool $response
      *
