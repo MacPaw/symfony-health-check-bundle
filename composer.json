@@ -33,7 +33,6 @@
         "symfony/framework-bundle": "^6.4 || ^7.4"
     },
     "require-dev": {
-        "ext-json": "*",
         "phpstan/phpstan": "^2.1",
         "squizlabs/php_codesniffer": "^4.0",
         "phpunit/phpunit": "^10.5",
