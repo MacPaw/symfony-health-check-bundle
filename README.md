@@ -74,7 +74,7 @@ Create Symfony Health Check Bundle Routing Config:
 
 ```yaml
 health_check:
-    resource: '@SymfonyHealthCheckBundle/Resources/config/routes.xml'
+    resource: '@SymfonyHealthCheckBundle/Resources/config/routes.php'
 ```
 
 Step 3: Configuration
