@@ -89,8 +89,6 @@ class RedisCheck implements CheckInterface
             return $response;
         }
 
-        // invalid configuration, RedisClient have different response, than one, provided by RedisArray in fact.
-        // @phpstan-ignore-next-line
         foreach ($response as $pingResult) {
             if (is_bool($pingResult)) {
                 continue;
