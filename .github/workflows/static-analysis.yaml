@@ -6,15 +6,17 @@ on:
         branches: [ master, develop ]
 
 jobs:
-    php-cs-fixer:
-        name: PHP-CS-Fixer
+    php-cs:
+        name: PHP CodeSniffer
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
+              with:
+                  extensions: redis, relay
 
             - name: Install dependencies
               run: composer install --no-progress --no-interaction --prefer-dist
@@ -27,29 +29,33 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
+              with:
+                  extensions: redis, relay
 
             - name: Install dependencies
               run: composer install --no-progress --no-interaction --prefer-dist
 
             - name: Run script
-              run: vendor/bin/phpstan analyse
+              run: vendor/bin/phpstan analyse --memory-limit=1G
 
     composer-validate:
         name: Composer validate
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
+              with:
+                  extensions: redis, relay
 
             - name: Install dependencies
               run: composer install --no-progress --no-interaction --prefer-dist
 
             - name: Run script
-              run: composer composer-validate
+              run: composer validate

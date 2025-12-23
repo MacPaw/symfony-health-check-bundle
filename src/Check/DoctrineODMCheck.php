@@ -12,18 +12,14 @@ class DoctrineODMCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'doctrine_odm_check';
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
     }
 
     public function check(): Response
     {
-        /**
-         * @var object|null $documentManager
-         */
+        /** @var \Doctrine\ODM\MongoDB\DocumentManager|null $documentManager */
         $documentManager = $this->container->get(
             'doctrine_mongodb.odm.document_manager',
             ContainerInterface::NULL_ON_INVALID_REFERENCE,

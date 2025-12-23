@@ -12,10 +12,9 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 class RedisAdapterWrapper
 {
     /**
-     * @param string $dsn
-     * @param array  $options
+     * @param array<string, mixed> $options
      *
-     * @return \Predis\ClientInterface|\Redis|\RedisArray|\RedisCluster|\Relay\Relay
+     * @return \Predis\ClientInterface|\Redis|\RedisArray|\RedisCluster|\Relay\Cluster|\Relay\Relay
      */
     public function createConnection(string $dsn, array $options = []): object
     {

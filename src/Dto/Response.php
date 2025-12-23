@@ -50,7 +50,7 @@ class Response
     }
 
     /**
-     * @return mixed[]
+     * @return array{name: string, result: bool, message: string, params: mixed[]}
      */
     public function toArray(): array
     {
