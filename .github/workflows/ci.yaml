@@ -15,41 +15,74 @@ jobs:
                   # --- Symfony 6.4 LTS ---
                     - php: '8.1'
                       symfony-versions: '^6.4'
+                      doctrine-orm-versions: '^2.0'
+                      doctrine-mongodb-odm-bundle-versions: '^4.4'
+                      mongodb-extension-version: '1.21.0'
                       coverage: 'none'
                     - php: '8.2'
                       symfony-versions: '^6.4'
+                      doctrine-orm-versions: '^3.0'
+                      doctrine-mongodb-odm-bundle-versions: '^5.0'
+                      mongodb-extension-version: ''
                       coverage: 'none'
                     - php: '8.3'
                       symfony-versions: '^6.4'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
                       coverage: 'none'
                     - php: '8.4'
                       symfony-versions: '^6.4'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
                       coverage: 'none'
                     - php: '8.5'
                       symfony-versions: '^6.4'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
                       coverage: 'none'
 
                     # --- Symfony 7.4 LTS ---
                     - php: '8.2'
                       symfony-versions: '^7.4'
+                      doctrine-orm-versions: '^2.0'
+                      doctrine-mongodb-odm-bundle-versions: '^5.0'
+                      mongodb-extension-version: '1.21.0'
                       coverage: 'none'
                     - php: '8.3'
                       symfony-versions: '^7.4'
+                      doctrine-orm-versions: '^3.0'
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: '2.0.0'
                       coverage: 'none'
                     - php: '8.4'
                       symfony-versions: '^7.4'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
                       coverage: 'none'
                     - description: 'Log Code Coverage'
                       php: '8.5'
                       coverage: 'xdebug'
                       symfony-versions: '^7.4'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
 
                     # --- Symfony 8.0 ---
                     - php: '8.4'
                       symfony-versions: '^8.0'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: ''
+                      mongodb-extension-version: ''
                       coverage: 'none'
                     - php: '8.5'
                       symfony-versions: '^8.0'
+                      doctrine-orm-versions: ''
+                      doctrine-mongodb-odm-bundle-versions: '^5.0'
+                      mongodb-extension-version: ''
                       coverage: 'none'
 
         name: PHP ${{ matrix.php }} Symfony ${{ matrix.symfony-versions }} ${{ matrix.description }}
@@ -57,11 +90,28 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - name: Prepare extensions
+              id: prepare-extensions
+              run: |
+                if [ -n "${{ matrix.mongodb-extension-version }}" ]; then
+                  MONGODB_VERSION="${{ matrix.mongodb-extension-version }}"
+                  if [[ "$MONGODB_VERSION" == "1.21" ]]; then
+                    MONGODB_VERSION="1.21.0"
+                  elif [[ "$MONGODB_VERSION" == "2.0" ]]; then
+                    MONGODB_VERSION="2.0.0"
+                  fi
+                  MONGODB_EXT="mongodb-mongodb/mongo-php-driver@${MONGODB_VERSION}"
+                else
+                  MONGODB_EXT="mongodb"
+                fi
+                echo "extensions=redis, relay, ${MONGODB_EXT}" >> $GITHUB_OUTPUT
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   coverage: ${{ matrix.coverage }}
+                  extensions: ${{ steps.prepare-extensions.outputs.extensions }}
 
             - name: Add PHPUnit matcher
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -74,6 +124,16 @@ jobs:
                   composer require --dev symfony/yaml:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require --dev symfony/browser-kit:${{ matrix.symfony-versions }} --no-update --no-scripts
                   composer require --dev symfony/cache:${{ matrix.symfony-versions }} --no-update --no-scripts
+
+            - name: Update Doctrine ORM version
+              if: matrix.doctrine-orm-versions != ''
+              run: |
+                  composer require --dev doctrine/orm:${{ matrix.doctrine-orm-versions }} --no-update --no-scripts
+
+            - name: Update Doctrine MongoDB ODM Bundle version
+              if: matrix.doctrine-mongodb-odm-bundle-versions != ''
+              run: |
+                  composer require --dev doctrine/mongodb-odm-bundle:${{ matrix.doctrine-mongodb-odm-bundle-versions }} --no-update --no-scripts
 
             - name: Install dependencies
               run: composer install

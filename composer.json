@@ -43,7 +43,7 @@
         "symfony/cache": "^6.4 || ^7.4 || ^8.0",
         "predis/predis": "^3.3",
         "doctrine/mongodb-odm-bundle": "^4.4 || ^5.0",
-        "doctrine/orm": "^2.0 || ^3.0 || ^4.0"
+        "doctrine/orm": "^2.0 || ^3.0"
     },
     "suggest": {
         "symfony/cache": "Required for RedisCheck - provides Redis connection factory",
