@@ -93,16 +93,9 @@ jobs:
             - name: Prepare extensions
               id: prepare-extensions
               run: |
+                MONGODB_EXT="mongodb"
                 if [ -n "${{ matrix.mongodb-extension-version }}" ]; then
-                  MONGODB_VERSION="${{ matrix.mongodb-extension-version }}"
-                  if [[ "$MONGODB_VERSION" == "1.21" ]]; then
-                    MONGODB_VERSION="1.21.0"
-                  elif [[ "$MONGODB_VERSION" == "2.0" ]]; then
-                    MONGODB_VERSION="2.0.0"
-                  fi
-                  MONGODB_EXT="mongodb-mongodb/mongo-php-driver@${MONGODB_VERSION}"
-                else
-                  MONGODB_EXT="mongodb"
+                  MONGODB_EXT="mongodb-${{ matrix.mongodb-extension-version }}"
                 fi
                 echo "extensions=redis, relay, ${MONGODB_EXT}" >> $GITHUB_OUTPUT
 
