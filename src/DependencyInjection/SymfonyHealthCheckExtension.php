@@ -9,7 +9,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use SymfonyHealthCheckBundle\Controller\HealthController;
 use SymfonyHealthCheckBundle\Controller\PingController;
 
@@ -20,8 +20,8 @@ class SymfonyHealthCheckExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('controller.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader->load('controller.php');
 
         $this->loadHealthChecks($config, $loader, $container);
 
@@ -31,10 +31,10 @@ class SymfonyHealthCheckExtension extends Extension
 
     private function loadHealthChecks(
         array $config,
-        XmlFileLoader $loader,
+        PhpFileLoader $loader,
         ContainerBuilder $container
     ): void {
-        $loader->load('health_checks.xml');
+        $loader->load('health_checks.php');
 
         $healthCheckCollection = $container->findDefinition(HealthController::class);
 

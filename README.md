@@ -35,6 +35,8 @@ return [
 Create Symfony Health Check Bundle Config:
 ----------------------------------
 
+> **Note:** XML configuration is no longer supported. Please use YAML or PHP configuration format in your project.
+
 Configurating health check - all available you can see [here](https://github.com/MacPaw/symfony-health-check-bundle/tree/master/src/Check).
 
 ```yaml
@@ -74,7 +76,7 @@ Create Symfony Health Check Bundle Routing Config:
 
 ```yaml
 health_check:
-    resource: '@SymfonyHealthCheckBundle/Resources/config/routes.xml'
+    resource: '@SymfonyHealthCheckBundle/Resources/config/routes.php'
 ```
 
 Step 3: Configuration
