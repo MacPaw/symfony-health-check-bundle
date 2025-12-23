@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Check;
 
+use Predis\ClientInterface as PredisClientInterface;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 use SymfonyHealthCheckBundle\Dto\Response;
 
@@ -11,13 +12,10 @@ class RedisCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'redis_check';
 
-    private RedisAdapterWrapper $redisAdapter;
-    private ?string $redisDsn;
-
-    public function __construct(RedisAdapterWrapper $redisAdapter, ?string $redisDsn)
-    {
-        $this->redisAdapter = $redisAdapter;
-        $this->redisDsn = $redisDsn;
+    public function __construct(
+        private readonly RedisAdapterWrapper $redisAdapter,
+        private readonly ?string $redisDsn,
+    ) {
     }
 
     public function check(): Response
@@ -29,25 +27,15 @@ class RedisCheck implements CheckInterface
         try {
             $redisConnection = $this->redisAdapter->createConnection($this->redisDsn);
 
-            switch (true) {
-                case $redisConnection instanceof \Redis:
-                    $result = $this->checkForDefaultRedisClient($redisConnection);
-
-                    break;
-                case $redisConnection instanceof \Predis\ClientInterface:
-                    $result = $this->checkForPredisClient($redisConnection);
-
-                    break;
-                case $redisConnection instanceof \RedisArray:
-                    $result = $this->checkForRedisArrayClient($redisConnection);
-
-                    break;
-                default:
-                    throw new \RuntimeException(sprintf(
-                        'Unsupported Redis client type: %s',
-                        get_class($redisConnection),
-                    ));
-            }
+            $result = match (true) {
+                $redisConnection instanceof \Redis => $this->checkForDefaultRedisClient($redisConnection),
+                $redisConnection instanceof PredisClientInterface => $this->checkForPredisClient($redisConnection),
+                $redisConnection instanceof \RedisArray => $this->checkForRedisArrayClient($redisConnection),
+                default => throw new \RuntimeException(sprintf(
+                    'Unsupported Redis client type: %s',
+                    $redisConnection::class,
+                )),
+            };
 
             if (!$result) {
                 return new Response(self::CHECK_RESULT_NAME, false, 'Redis ping failed.');
@@ -70,8 +58,9 @@ class RedisCheck implements CheckInterface
         return $this->isValidPingResponse($response);
     }
 
-    private function checkForPredisClient(\Predis\ClientInterface $client): bool
+    private function checkForPredisClient(PredisClientInterface $client): bool
     {
+        /** @var string|bool $response */
         $response = $client->ping();
 
         if (is_bool($response)) {
@@ -89,8 +78,7 @@ class RedisCheck implements CheckInterface
             return $response;
         }
 
-        // invalid configuration, RedisClient have different response, than one, provided by RedisArray in fact.
-        // @phpstan-ignore-next-line
+        /** @var array<string|bool> $response */
         foreach ($response as $pingResult) {
             if (is_bool($pingResult)) {
                 continue;

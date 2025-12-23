@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Result;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Check\DoctrineORMCheck;
-use SymfonyHealthCheckBundle\Tests\Mock\ConnectionMock;
-use SymfonyHealthCheckBundle\Tests\Mock\EntityManagerMock;
 
 class DoctrineORMCheckTest extends TestCase
 {
@@ -75,7 +77,26 @@ class DoctrineORMCheckTest extends TestCase
     public function testDoctrineORMSuccess(): void
     {
         $container = $this->createMock(ContainerInterface::class);
-        $entityManager = $this->createMock(EntityManagerMock::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $connection = $this->createMock(Connection::class);
+        $platform = $this->createMock(AbstractPlatform::class);
+        $queryResult = $this->createMock(Result::class);
+
+        $platform
+            ->method('getDummySelectSQL')
+            ->willReturn('SELECT 1');
+
+        $connection
+            ->method('getDatabasePlatform')
+            ->willReturn($platform);
+
+        $connection
+            ->method('executeQuery')
+            ->willReturn($queryResult);
+
+        $entityManager
+            ->method('getConnection')
+            ->willReturn($connection);
 
         $container
             ->method('has')
@@ -108,18 +129,16 @@ class DoctrineORMCheckTest extends TestCase
     public function testDoctrineORMFailPing(): void
     {
         $container = $this->createMock(ContainerInterface::class);
-        $entityManager = $this->createMock(EntityManagerMock::class);
-        $connectionMock = $this->createMock(ConnectionMock::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $connection = $this->createMock(Connection::class);
 
         $entityManager
             ->method('getConnection')
-            ->with()
-            ->willReturn($connectionMock);
+            ->willReturn($connection);
 
-        $connectionMock
+        $connection
             ->method('getDatabasePlatform')
-            ->with()
-            ->will(self::throwException(new Exception('failed getDatabasePlatform')));
+            ->willThrowException(new Exception('failed getDatabasePlatform'));
 
         $container
             ->method('has')
