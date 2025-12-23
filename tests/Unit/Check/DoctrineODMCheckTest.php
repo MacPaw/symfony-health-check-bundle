@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 
+use Doctrine\ODM\MongoDB\Configuration;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Exception;
+use MongoDB\Client;
+use MongoDB\Database;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use SymfonyHealthCheckBundle\Check\DoctrineODMCheck;
-use SymfonyHealthCheckBundle\Tests\Mock\DocumentManager\ClientMock;
-use SymfonyHealthCheckBundle\Tests\Mock\DocumentManager\ConfigurationMock;
-use SymfonyHealthCheckBundle\Tests\Mock\DocumentManager\DatabaseMock;
-use SymfonyHealthCheckBundle\Tests\Mock\DocumentManager\DocumentManagerMock;
 
 class DoctrineODMCheckTest extends TestCase
 {
@@ -72,7 +72,27 @@ class DoctrineODMCheckTest extends TestCase
     public function testDoctrineODMSuccess(): void
     {
         $container = $this->createMock(ContainerInterface::class);
-        $documentManager = $this->createMock(DocumentManagerMock::class);
+        $documentManager = $this->createMock(DocumentManager::class);
+        $client = $this->createMock(Client::class);
+        $database = $this->createMock(Database::class);
+        $configuration = $this->createMock(Configuration::class);
+
+        $configuration
+            ->method('getDefaultDB')
+            ->willReturn('default');
+
+        $documentManager
+            ->method('getClient')
+            ->willReturn($client);
+
+        $documentManager
+            ->method('getConfiguration')
+            ->willReturn($configuration);
+
+        $client
+            ->method('selectDatabase')
+            ->with('default')
+            ->willReturn($database);
 
         $container
             ->method('get')
@@ -100,10 +120,10 @@ class DoctrineODMCheckTest extends TestCase
     public function testDoctrineFailPing(): void
     {
         $container = $this->createMock(ContainerInterface::class);
-        $documentManager = $this->createMock(DocumentManagerMock::class);
-        $client = $this->createMock(ClientMock::class);
-        $database = $this->createMock(DatabaseMock::class);
-        $configuration = $this->createMock(ConfigurationMock::class);
+        $documentManager = $this->createMock(DocumentManager::class);
+        $client = $this->createMock(Client::class);
+        $database = $this->createMock(Database::class);
+        $configuration = $this->createMock(Configuration::class);
 
         $configuration
             ->method('getDefaultDB')
@@ -111,12 +131,10 @@ class DoctrineODMCheckTest extends TestCase
 
         $documentManager
             ->method('getClient')
-            ->with()
             ->willReturn($client);
 
         $documentManager
             ->method('getConfiguration')
-            ->with()
             ->willReturn($configuration);
 
         $client
@@ -127,7 +145,7 @@ class DoctrineODMCheckTest extends TestCase
         $database
             ->method('command')
             ->with(['ping' => 1])
-            ->will(self::throwException(new Exception('No suitable servers found')));
+            ->willThrowException(new Exception('No suitable servers found'));
 
         $container
             ->method('get')

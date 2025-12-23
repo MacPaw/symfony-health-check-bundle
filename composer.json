@@ -30,16 +30,29 @@
     ],
     "require": {
         "php": "^8.1",
-        "symfony/framework-bundle": "^6.4 || ^7.4"
+        "symfony/framework-bundle": "^6.4 || ^7.4 || ^8.0"
     },
     "require-dev": {
+        "ext-redis": "*",
+        "ext-relay": "*",
         "phpstan/phpstan": "^2.1",
         "squizlabs/php_codesniffer": "^4.0",
         "phpunit/phpunit": "^10.5",
-        "symfony/yaml": "^6.4 || ^7.4",
-        "symfony/browser-kit": "^6.4 || ^7.4",
-        "symfony/cache": "^6.4 || ^7.4",
-        "predis/predis": "^3.3"
+        "symfony/yaml": "^6.4 || ^7.4 || ^8.0",
+        "symfony/browser-kit": "^6.4 || ^7.4 || ^8.0",
+        "symfony/cache": "^6.4 || ^7.4 || ^8.0",
+        "predis/predis": "^3.3",
+        "doctrine/mongodb-odm-bundle": "^4.4 || ^5.0",
+        "doctrine/orm": "^2.0 || ^3.0 || ^4.0"
+    },
+    "suggest": {
+        "symfony/cache": "Required for RedisCheck - provides Redis connection factory",
+        "ext-redis": "Native PHP Redis extension for RedisCheck (alternative to predis)",
+        "predis/predis": "Pure PHP Redis client for RedisCheck (alternative to ext-redis)",
+        "ext-relay": "High-performance Redis extension for RedisCheck (alternative to ext-redis)",
+        "doctrine/orm": "Required for DoctrineORMCheck - database health monitoring",
+        "doctrine/mongodb-odm-bundle": "Required for DoctrineODMCheck - MongoDB health monitoring",
+        "ext-mongodb": "Required for DoctrineODMCheck - MongoDB driver extension"
     },
     "autoload": {
         "psr-4": {

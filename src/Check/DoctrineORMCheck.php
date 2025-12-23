@@ -12,11 +12,9 @@ class DoctrineORMCheck implements CheckInterface
 {
     private const CHECK_RESULT_NAME = 'doctrine';
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
     }
 
     public function check(): Response
@@ -25,9 +23,7 @@ class DoctrineORMCheck implements CheckInterface
             return new Response(self::CHECK_RESULT_NAME, false, 'Entity Manager Not Found.');
         }
 
-        /**
-         * @var object|null $entityManager
-         */
+        /** @var \Doctrine\ORM\EntityManagerInterface|null $entityManager */
         $entityManager = $this->container->get('doctrine.orm.entity_manager');
 
         if ($entityManager === null) {
@@ -35,8 +31,8 @@ class DoctrineORMCheck implements CheckInterface
         }
 
         try {
-            $con = $entityManager->getConnection();
-            $con->executeQuery($con->getDatabasePlatform()->getDummySelectSQL())->free();
+            $connection = $entityManager->getConnection();
+            $connection->executeQuery($connection->getDatabasePlatform()->getDummySelectSQL())->free();
         } catch (Throwable $e) {
             return new Response(self::CHECK_RESULT_NAME, false, $e->getMessage());
         }

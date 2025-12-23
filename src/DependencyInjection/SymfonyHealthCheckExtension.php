@@ -18,6 +18,13 @@ class SymfonyHealthCheckExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
+        /** @var array{
+         *     health_checks: list<array{id: string}>,
+         *     ping_checks: list<array{id: string}>,
+         *     redis_dsn: ?string,
+         *     health_error_response_code: ?int,
+         *     ping_error_response_code: ?int
+         * } $config */
         $config = $this->processConfiguration($configuration, $configs);
 
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
@@ -29,6 +36,15 @@ class SymfonyHealthCheckExtension extends Extension
             ->setArgument(1, $config['redis_dsn']);
     }
 
+    /**
+     * @param array{
+     *     health_checks: list<array{id: string}>,
+     *     ping_checks: list<array{id: string}>,
+     *     redis_dsn: ?string,
+     *     health_error_response_code: ?int,
+     *     ping_error_response_code: ?int
+     * } $config
+     */
     private function loadHealthChecks(
         array $config,
         PhpFileLoader $loader,

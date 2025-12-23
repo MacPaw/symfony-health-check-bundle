@@ -12,7 +12,7 @@ use SymfonyHealthCheckBundle\Check\CheckInterface;
 abstract class BaseController extends AbstractController
 {
     /**
-     * @var array<CheckInterface>
+     * @var list<CheckInterface>
      */
     private array $checks = [];
     private ?int $customResponseCode = null;
@@ -37,14 +37,20 @@ abstract class BaseController extends AbstractController
         return new JsonResponse($checkResult, $responseCode);
     }
 
+    /**
+     * @return list<array{name: string, result: bool, message: string, params: mixed[]}>
+     */
     protected function performCheck(): array
     {
         return array_map(
-            fn($healthCheck) => $healthCheck->check()->toArray(),
+            static fn(CheckInterface $healthCheck): array => $healthCheck->check()->toArray(),
             $this->checks
         );
     }
 
+    /**
+     * @param list<array{name: string, result: bool, message: string, params: mixed[]}> $results
+     */
     protected function determineResponseCode(array $results): int
     {
         $code = $this->customResponseCode;

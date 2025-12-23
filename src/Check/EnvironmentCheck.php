@@ -12,16 +12,15 @@ class EnvironmentCheck implements CheckInterface
 {
     private const CHECK_RESULT_KEY = 'environment';
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        private readonly ContainerInterface $container,
+    ) {
     }
 
     public function check(): Response
     {
         try {
+            /** @var string $env */
             $env = $this->container->getParameter('kernel.environment');
         } catch (Throwable $e) {
             return new Response(self::CHECK_RESULT_KEY, false, 'Could not determine');
