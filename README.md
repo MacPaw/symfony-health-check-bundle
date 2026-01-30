@@ -149,6 +149,49 @@ ping:
 
 ```
 
+Rate Limiting (Optional):
+----------------------------------
+
+To protect your health check endpoints from abuse, you can enable rate limiting. This feature requires the `symfony/rate-limiter` package:
+
+```console
+composer require symfony/rate-limiter
+```
+
+Configure rate limiting in your bundle config:
+
+```yaml
+# config/packages/symfony_health_check.yaml
+symfony_health_check:
+    health_checks:
+        - id: symfony_health_check.doctrine_orm_check
+    ping_checks:
+        - id: symfony_health_check.status_up_check
+
+    rate_limiter:
+        enabled: true
+        health:
+            enabled: true
+            policy: 'fixed_window'   # or 'sliding_window', 'token_bucket'
+            limit: 100               # max requests
+            interval: '60 minutes'   # time window
+        ping:
+            enabled: true
+            policy: 'fixed_window'
+            limit: 200
+            interval: '60 minutes'
+```
+
+When rate limit is exceeded, the endpoint returns HTTP 429 (Too Many Requests) with the following headers:
+- `X-RateLimit-Remaining`: remaining requests in current window
+- `X-RateLimit-Retry-After`: seconds until the limit resets
+- `X-RateLimit-Limit`: maximum requests allowed
+
+Available policies:
+- `fixed_window`: Simple counter that resets after the interval
+- `sliding_window`: More accurate rate limiting using a sliding time window
+- `token_bucket`: Allows bursts while maintaining average rate
+
 How To Use Healthcheck In Docker
 ----------------------------------
 ```dockerfile
