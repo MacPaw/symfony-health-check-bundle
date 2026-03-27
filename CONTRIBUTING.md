@@ -12,7 +12,7 @@ We're using [`composer/composer`](https://github.com/composer/composer) to manag
 
 ## Coding Standard
 
-This project uses [PHP CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) to enforce coding standards.
+This project uses [PHP CodeSniffer](https://github.com/PHPCSStandards/PHP_CodeSniffer) to enforce coding standards.
 The coding standard rules are defined in the **phpcs.xml.dist** file (part of this repository).
 
 Your Pull-Request must be compliant with the said standard.
