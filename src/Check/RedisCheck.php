@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SymfonyHealthCheckBundle\Check;
 
 use Predis\ClientInterface as PredisClientInterface;
+use Predis\Response\Status as PredisStatusResponse;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 use SymfonyHealthCheckBundle\Dto\Response;
 
@@ -60,14 +61,21 @@ class RedisCheck implements CheckInterface
 
     private function checkForPredisClient(PredisClientInterface $client): bool
     {
-        /** @var string|bool $response */
         $response = $client->ping();
 
         if (is_bool($response)) {
             return $response;
         }
 
-        return $this->isValidPingResponse($response);
+        if ($response instanceof PredisStatusResponse) {
+            return $this->isValidPingResponse($response->getPayload());
+        }
+
+        if (is_string($response)) {
+            return $this->isValidPingResponse($response);
+        }
+
+        return false;
     }
 
     private function checkForRedisArrayClient(\RedisArray $client): bool
