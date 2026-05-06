@@ -6,6 +6,7 @@ namespace SymfonyHealthCheckBundle\Tests\Unit\Check;
 
 use PHPUnit\Framework\TestCase;
 use Predis\Connection\Cluster\RedisCluster;
+use Predis\Response\Status as PredisStatusResponse;
 use SymfonyHealthCheckBundle\Adapter\RedisAdapterWrapper;
 use SymfonyHealthCheckBundle\Check\RedisCheck;
 
@@ -276,6 +277,162 @@ class RedisCheckTest extends TestCase
         self::assertTrue($result['result']);
         self::assertSame('ok', $result['message']);
         self::assertIsArray($result['params']);
+    }
+
+    public function testItSuccessCheckWithPredisClientWhenPingReturnsStatusObject(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn(PredisStatusResponse::get('PONG'));
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertTrue($result['result']);
+        self::assertSame('ok', $result['message']);
+    }
+
+    public function testItFailsCheckWhenPredisPingReturnsNonPongStatus(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn(PredisStatusResponse::get('unexpected'));
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Redis ping failed.', $result['message']);
+    }
+
+    public function testItFailsCheckWhenPredisPingReturnsFalse(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn(false);
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Redis ping failed.', $result['message']);
+    }
+
+    public function testItFailsCheckWhenPredisPingReturnsInvalidString(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn('not-a-pong');
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Redis ping failed.', $result['message']);
+    }
+
+    public function testItFailsCheckWhenPredisPingReturnsUnsupportedType(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn(0);
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertFalse($result['result']);
+        self::assertSame('Redis ping failed.', $result['message']);
+    }
+
+    public function testItSuccessCheckWithPredisClientWhenPingReturnsPlusPongStatus(): void
+    {
+        /** @var \Predis\Client $connectionMock */
+        $connectionMock = $this->getMockBuilder(\Predis\Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $connectionMock->expects($this->once())
+            ->method('__call')
+            ->with('ping')
+            ->willReturn(PredisStatusResponse::get('+PONG'));
+
+        $adapter = $this->createMock(RedisAdapterWrapper::class);
+        $adapter
+            ->method('createConnection')
+            ->willReturn($connectionMock);
+
+        $check = new RedisCheck($adapter, 'redis://localhost');
+
+        $result = $check->check()->toArray();
+
+        self::assertSame('redis_check', $result['name']);
+        self::assertTrue($result['result']);
+        self::assertSame('ok', $result['message']);
     }
 
     public static function provideAvailablePingResponsesOnDefaultClients(): array
