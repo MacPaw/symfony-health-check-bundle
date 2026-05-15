@@ -43,9 +43,11 @@
         "symfony/cache": "^6.4 || ^7.4 || ^8.0",
         "predis/predis": "^2.2 || ^3.3",
         "doctrine/mongodb-odm-bundle": "^4.4 || ^5.0",
-        "doctrine/orm": "^2.0 || ^3.0"
+        "doctrine/orm": "^2.0 || ^3.0",
+        "symfony/rate-limiter": "^6.4 || ^7.4 || ^8.0"
     },
     "suggest": {
+        "symfony/rate-limiter": "Required for rate limiting on health check endpoints",
         "symfony/cache": "Required for RedisCheck - provides Redis connection factory",
         "ext-redis": "Native PHP Redis extension for RedisCheck (alternative to predis)",
         "predis/predis": "Pure PHP Redis client for RedisCheck (alternative to ext-redis)",
