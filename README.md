@@ -41,6 +41,9 @@ Configurating health check - all available you can see [here](https://github.com
 
 ```yaml
 # config/packages/symfony_health_check.yaml`
+
+![Symfony Health Check Bundle](.github/header.png)
+
 symfony_health_check:
     health_checks:
         - id: symfony_health_check.doctrine_orm_check
